@@ -1,0 +1,14 @@
+{
+  "name": "Daniel Rivera",
+  "intro": "I’m a UC Berkeley student interested in math, computing, and quantitative research. I like building things that let me test a hunch, whether that’s with market data, a deck of cards, or three robots.",
+  "workIntro": "Experiments, simulations, and tools I’ve built. Each project page has the question I started with and what came out of it.",
+  "about": [
+    "I’m studying math and computing at UC Berkeley. I’m especially interested in probability and in how models hold up when assumptions about data, costs, or behavior change.",
+    "One of my first projects was a poker equity simulator for MITES Semester. It made a question that felt intuitive into something I could actually compute. Since then I’ve used simulation to explore market risk, worked with three robots to study crowding, and built an educational health model that shows the range of outcomes its assumptions can produce.",
+    "I’ve also run an e-commerce business and worked on live audio. Running the shop gave me a reason to build small tools I’d actually use, including a calculator for figuring out what an item costs by the time it reaches a buyer."
+  ],
+  "links": [
+    { "label": "GitHub", "url": "https://github.com/drivera-b" },
+    { "label": "LinkedIn", "url": "https://www.linkedin.com/in/daniel-rivera-bu/" }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "title": "SLCE",
+  "year": 2026,
+  "featuredOrder": 3,
+  "topics": ["Modeling", "Software"],
+  "summary": "An educational health-modeling prototype that uses Monte Carlo simulation to show how uncertainty propagates through a forecast.",
+  "question": "How do you show someone what a health model knows and where its assumptions take over?",
+  "figure": {
+    "file": "slce-dashboard.png",
+    "width": 1600,
+    "height": 814,
+    "alt": "SLCE demo dashboard showing a baseline risk estimate, the logistic regression model, and a summary of input evidence and applicability.",
+    "caption": "The demo dashboard records the model, simulation horizon, and evidence coverage alongside its estimates."
+  },
+  "sections": [
+    { "title": "What I built", "text": "I helped develop a Streamlit prototype with a baseline classifier and a separate simulation of possible health trajectories. The labeled UCI Cleveland dataset supports the baseline. NHANES provides population context. The app documents where its inputs come from and shows uncertainty bands across simulations." },
+    { "title": "A modeling choice", "text": "Five-fold evaluation favored logistic regression on probability error among the models we compared. We kept it as the baseline because probability quality mattered for the simulation, and a simpler model made the inputs and assumptions easier to inspect." },
+    { "title": "Where the model is useful", "text": "SLCE is an educational prototype. Its scenarios show how the model responds to defined changes. They do not establish how an intervention would affect an individual’s health or support diagnosis." }
+  ],
+  "links": [
+    { "label": "Code and validation", "url": "https://github.com/drivera-b/SCLE" }
+  ]
+}

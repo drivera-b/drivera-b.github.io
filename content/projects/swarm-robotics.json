@@ -1,0 +1,24 @@
+{
+  "title": "Swarm Robotics and Resource Allocation",
+  "year": 2026,
+  "featuredOrder": 2,
+  "topics": ["Robotics", "Modeling"],
+  "summary": "A three-robot experiment on how a crowding penalty affects where agents go and how much reward they collect.",
+  "question": "Can a simple crowding penalty spread robots out without giving up too much reward?",
+  "figure": {
+    "file": "swarm-tradeoff.png",
+    "width": 2579,
+    "height": 833,
+    "alt": "Three plots compare score per decision, allocation evenness, and co-location across congestion penalties of two, six, and ten.",
+    "caption": "The 24-trial pilot compared three penalty levels. The groups had 2, 20, and 2 complete trials."
+  },
+  "sections": [
+    { "title": "What I built", "text": "I worked on a Python controller and analysis for three Sphero BOLT robots competing across four zones. The value of each zone changed on a schedule. Each robot weighed a zone’s value against an estimate of how crowded it would be, while the controller logged its choices." },
+    { "title": "What the pilot showed", "text": "The middle penalty was associated with a more even spread across zones and lower co-location, with a drop in average score per decision. At the highest penalty, the score declined further and the spread improved little. That made the middle setting the best observed compromise in this pilot." },
+    { "title": "What I could measure", "text": "The co-location metric is computed from simultaneous zone choices. A setup with independent position tracking could measure actual physical proximity and collisions. The uneven trial counts make this comparison descriptive." }
+  ],
+  "links": [
+    { "label": "Code and results", "url": "https://github.com/drivera-b/Swarm-Robotics-as-a-Model-of-Competitive-Resource-Allocation" },
+    { "label": "Research report", "url": "https://github.com/drivera-b/Swarm-Robotics-as-a-Model-of-Competitive-Resource-Allocation/blob/main/docs/research_report.md" }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "title": "Landed-Cost Calculator",
+  "year": 2026,
+  "topics": ["Software"],
+  "summary": "A browser tool I built to turn shipping, fees, and resale prices into landed cost and break-even estimates.",
+  "question": "What will an item actually cost by the time it reaches the buyer?",
+  "sections": [
+    { "title": "Why I built it", "text": "While running my e-commerce shop, I kept recalculating the same costs across items and shipping options. I built a JavaScript calculator that takes product and shipping costs, fees, and package measurements and gives me a per-item estimate and a break-even price." },
+    { "title": "A detail that mattered", "text": "A light package can be expensive to ship if it takes up a lot of space. Comparing actual and dimensional weight makes that visible. The calculator keeps line rates editable so I can enter a current quote and compare scenarios." }
+  ]
+}

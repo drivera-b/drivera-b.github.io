@@ -1,0 +1,25 @@
+{
+  "title": "Quant Research Workbench",
+  "year": 2025,
+  "period": "2025–present",
+  "featuredOrder": 1,
+  "topics": ["Quant", "Software"],
+  "summary": "A Python research workflow for testing how intraday futures ideas hold up under costs, fill uncertainty, and account rules.",
+  "question": "How sensitive is a promising backtest to the fills and costs it assumes?",
+  "figure": {
+    "file": "workbench-execution-stress.svg",
+    "width": 920,
+    "height": 330,
+    "alt": "Bar chart comparing simulated lifecycle expectancy under baseline costs, added costs, and worse fills.",
+    "caption": "Execution stress in a simulated account lifecycle. The chart comes from the public workbench."
+  },
+  "sections": [
+    { "title": "What I built", "text": "I assembled a research workflow around a fixed historical benchmark, later evaluation windows, and checks that isolate the effect of changing a policy or assumption. The public workbench includes trade summaries, bootstrap intervals, lifecycle simulations, and reports that can be rebuilt from the included artifacts." },
+    { "title": "What the analysis showed", "text": "In the published stress scenarios, a small added cost had less impact than degrading fills across the simulated trade stream. That made execution quality a priority for subsequent evaluation. The result depends on the historical trade sample and how the fill degradation was modeled." },
+    { "title": "What the evidence covers", "text": "The public release documents historical analysis and simulation. Real-world fill behavior and live profitability would require separate evidence." }
+  ],
+  "links": [
+    { "label": "Public repository", "url": "https://github.com/drivera-b/quant-workbench" },
+    { "label": "Research case study", "url": "https://github.com/drivera-b/quant-workbench/blob/main/CASE_STUDY.md" }
+  ]
+}
