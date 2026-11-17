@@ -10,14 +10,11 @@
   ],
   "hero": {
     "image": {
-      "file": "swarm-arena-close.jpg",
-      "width": 1200,
-      "height": 1303,
-      "alt": "Three clear Sphero BOLT robots sit in a taped cardboard arena on a workbench. A laptop in the foreground shows the program used to launch trials.",
-      "caption": "Three Sphero BOLT robots in the cardboard arena, with the trial launcher on the laptop."
-    },
-    "project": "swarm-robotics",
-    "linkLabel": "Read about the experiment"
+      "file": "daniel-portrait.jpg",
+      "width": 682,
+      "height": 852,
+      "alt": "Daniel Rivera in a white shirt, arms crossed, standing in front of a stone building with tall columns."
+    }
   },
   "workIntro": "Experiments, simulations, and tools I’ve built. Each project page has the question I started with and what came out of it.",
   "about": [
@@ -37,10 +34,45 @@
     }
   ],
   "outside": [
-    { "title": "Health", "text": "I train full body every other day and I care about what I eat. I love kiwis. In high school I swam varsity." },
-    { "title": "Faith", "text": "Faith is a big part of who I am. From 2025 to 2026 I helped run sound for weekly services at my church, with about 150 people in the room and about 300 on the livestream." },
-    { "title": "The shop", "text": "In 2022 I started a resale shop with $25. I’ve filled more than 600 orders since, and running it gave me a reason to build small tools I’d actually use." },
-    { "title": "Quant", "text": "I love quant. I started studying NQ and ES futures on my own in 2021, and the research workbench grew out of that." }
+    {
+      "title": "Health",
+      "text": "I train full body every other day and I care about what I eat. I love kiwis. In high school I swam varsity."
+    },
+    {
+      "title": "Faith",
+      "text": "Faith is a big part of who I am. From 2025 to 2026 I helped run sound for weekly services at my church, with about 150 people in the room and about 300 on the livestream."
+    },
+    {
+      "title": "The shop",
+      "text": "In 2022 I started a resale shop with $25. I’ve filled more than 600 orders since, and running it gave me a reason to build small tools I’d actually use."
+    },
+    {
+      "title": "Quant",
+      "text": "I love quant. I started studying NQ and ES futures on my own in 2021, and the research workbench grew out of that."
+    }
+  ],
+  "photos": [
+    {
+      "file": "about-sunset.jpg",
+      "width": 708,
+      "height": 531,
+      "alt": "An orange and blue sunset over a harbor full of fishing boats.",
+      "caption": "A sunset over the harbor."
+    },
+    {
+      "file": "about-breakfast.jpg",
+      "width": 600,
+      "height": 450,
+      "alt": "A hand holding a bowl of banana slices, berries, and granola.",
+      "caption": "Fruit and granola."
+    },
+    {
+      "file": "about-ceramic.jpg",
+      "width": 600,
+      "height": 450,
+      "alt": "A green glazed ceramic jar with arched cutouts, its lid resting beside it on a wooden table.",
+      "caption": "A ceramic piece I made."
+    }
   ],
   "honors": [
     "SkillsUSA California State Champion and National Qualifier",
@@ -49,8 +81,21 @@
     "Gates Scholarship Semifinalist",
     "MITES Semester scholar, 2025"
   ],
+  "honorsFigure": {
+    "file": "about-skillsusa.jpg",
+    "width": 1024,
+    "height": 682,
+    "alt": "Six students in red SkillsUSA jackets wearing medals. Daniel, in the center, holds a banner that reads State Champion, Chapter Business Procedure, 2026.",
+    "caption": "State champions in Chapter Business Procedure at SkillsUSA California, 2026."
+  },
   "links": [
-    { "label": "GitHub", "url": "https://github.com/drivera-b" },
-    { "label": "LinkedIn", "url": "https://www.linkedin.com/in/daniel-rivera-bu/" }
+    {
+      "label": "GitHub",
+      "url": "https://github.com/drivera-b"
+    },
+    {
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/in/daniel-rivera-bu/"
+    }
   ]
 }

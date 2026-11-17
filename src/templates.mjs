@@ -24,6 +24,7 @@ export function page({ site, title, description, root, current, body, script, re
   <script>try { if (localStorage.getItem("theme") === "dark") document.documentElement.dataset.theme = "dark"; } catch {}</script>
   <link rel="icon" href="${root}assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="${root}assets/fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="${root}assets/fonts/bodoni-moda-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="${root}assets/site.css">
   <script src="${root}assets/theme.js" defer></script>
   ${script ? `<script src="${root}assets/${script}" defer></script>` : ""}
@@ -89,6 +90,14 @@ function figureBlock(figure, root, number, options) {
       </figure>`;
 }
 
+// A personal photo with a short caption, used on the About page.
+function photo(figure, root, className = "photo") {
+  return `<figure class="${className}">
+          <div class="plate">${image(figure, root)}</div>
+          <figcaption>${escapeHtml(figure.caption)}</figcaption>
+        </figure>`;
+}
+
 function period(project) {
   return escapeHtml(project.period ?? project.year);
 }
@@ -124,7 +133,7 @@ export function home(site, featured) {
     </div>
     ${hero ? `<figure class="hero-figure">
       <div class="plate">${image(hero.image, "./", { eager: true })}</div>
-      <figcaption>${escapeHtml(hero.image.caption)}${heroLink}</figcaption>
+      ${hero.image.caption || heroLink ? `<figcaption>${escapeHtml(hero.image.caption ?? "")}${heroLink}</figcaption>` : ""}
     </figure>` : ""}
   </section>
   <section class="selected" aria-labelledby="selected-work">
@@ -183,6 +192,9 @@ export function about(site) {
           <p>${escapeHtml(note.text)}</p>
         </div>`).join("\n        ")}
       </div>
+      ${site.photos?.length ? `<div class="photo-strip">
+        ${site.photos.map(figure => photo(figure, "../")).join("\n        ")}
+      </div>` : ""}
     </section>`);
   }
   if (site.honors?.length) {
@@ -191,6 +203,7 @@ export function about(site) {
       <ul class="plain-list nb-body">
         ${site.honors.map(honor => `<li>${escapeHtml(honor)}</li>`).join("\n        ")}
       </ul>
+      ${site.honorsFigure ? photo(site.honorsFigure, "../", "photo photo-wide") : ""}
     </section>`);
   }
   rows.push(`<section class="nb-row">

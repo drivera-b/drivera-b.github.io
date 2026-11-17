@@ -20,9 +20,9 @@ async function loadJson(file) {
   }
 }
 
-async function checkFigure(figure, source) {
+async function checkFigure(figure, source, { captionOptional = false } = {}) {
   const { file, width, height, alt, caption } = figure;
-  if (!/^[a-z0-9-]+\.(png|jpg|webp|svg)$/.test(file) || !alt || !caption
+  if (!/^[a-z0-9-]+\.(png|jpg|webp|svg)$/.test(file) || !alt || (!caption && !captionOptional)
       || !Number.isInteger(width) || width < 1 || !Number.isInteger(height) || height < 1) {
     throw new Error(`Invalid figure in ${source}`);
   }
@@ -82,11 +82,14 @@ projects.sort((a, b) => (a.featuredOrder ?? Number.MAX_SAFE_INTEGER) - (b.featur
 const featured = projects.filter(project => project.featuredOrder);
 
 if (site.hero) {
-  await checkFigure(site.hero.image, "content/site.json");
+  await checkFigure(site.hero.image, "content/site.json", { captionOptional: true });
   if (site.hero.project && !projects.some(project => project.slug === site.hero.project)) {
     throw new Error(`Hero links to unknown project ${site.hero.project}`);
   }
 }
+
+for (const photo of site.photos ?? []) await checkFigure(photo, "content/site.json");
+if (site.honorsFigure) await checkFigure(site.honorsFigure, "content/site.json");
 
 await rm(dist, { recursive: true, force: true });
 await cp(new URL("public/", base), dist, { recursive: true });

@@ -17,7 +17,7 @@ To preview entries that are still under review, put them in `content/candidates/
 
 ## Edit the site
 
-- `content/site.json` contains the home and About copy and the profile links. `hero.image` is the homepage photo, `mark` is the Greek letter beside your name, and `outside` and `honors` fill the About page.
+- `content/site.json` contains the home and About copy and the profile links. `hero.image` is the homepage photo, `mark` is the Greek letter beside your name, and `outside`, `photos`, `honors`, and `honorsFigure` fill the About page. Every photo needs `file`, `width`, `height`, and `alt`; About photos also need a `caption`.
 - `content/projects/` contains one JSON file per project. The filename becomes its URL. Copy an entry to add a project. Use `year` for sorting, `period` for an optional display date, `topics` for filters, and `featuredOrder` for homepage placement and priority in the Work index. Figures and external links are optional.
 - A project can have a `symbol` with a `glyph`, a `name`, and a `meaning`. The letter appears beside the project in lists, and the meaning appears on its page.
 - Each section can have its own `figure`, and a `formula` with an `expression` and an optional `note`. Figures are numbered in order on the page.
