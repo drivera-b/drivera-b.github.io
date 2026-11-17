@@ -24,7 +24,7 @@ export function page({ site, title, description, root, current, body, script, re
   <script>try { if (localStorage.getItem("theme") === "dark") document.documentElement.dataset.theme = "dark"; } catch {}</script>
   <link rel="icon" href="${root}assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="${root}assets/fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="${root}assets/fonts/old-standard-tt-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="${root}assets/fonts/bodoni-moda-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="${root}assets/site.css">
   <script src="${root}assets/theme.js" defer></script>
   ${script ? `<script src="${root}assets/${script}" defer></script>` : ""}
