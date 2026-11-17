@@ -14,7 +14,7 @@
   "sections": [
     {
       "title": "Why I built it",
-      "text": "I started a resale shop in 2022 with $25 and have filled more than 600 orders since. I kept recalculating the same costs across items and shipping options. I built a JavaScript calculator that takes product and shipping costs, fees, and package measurements and gives me a per-item estimate and a break-even price."
+      "text": "I started a resale shop in 2022 with $25 and filled more than 600 orders while I ran it. I kept recalculating the same costs across items and shipping options. I built a JavaScript calculator that takes product and shipping costs, fees, and package measurements and gives me a per-item estimate and a break-even price."
     },
     {
       "title": "A detail that mattered",

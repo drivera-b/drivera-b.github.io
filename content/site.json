@@ -6,7 +6,7 @@
   "intro": "I study math and computing at UC Berkeley, and I love quant. Most of what I build starts as a hunch I want to test, whether that’s with market data, a deck of cards, or three robots.",
   "introMore": [
     "I’m outgoing, and I’m devoted: whatever I take on, I want to do it as well as I can.",
-    "Away from the laptop I train full body every other day, love kiwis, and run a resale shop I started with $25. Faith is a big part of who I am."
+    "Away from the laptop, I love kiwis and my favorite way to train is full body, every other day. I used to run a resale shop I started with $25, and I loved it. Faith is a big part of who I am."
   ],
   "hero": {
     "image": {
@@ -17,6 +17,18 @@
     }
   },
   "workIntro": "Experiments, simulations, and tools I’ve built. Each project page has the question I started with and what came out of it.",
+  "now": {
+    "label": "Currently exploring",
+    "symbol": {
+      "glyph": "θ",
+      "name": "theta",
+      "meaning": "the weights a neural network learns."
+    },
+    "paragraphs": [
+      "Machine learning is my newest interest. I’m teaching myself neural networks, working through fast.ai and building in PyTorch.",
+      "Stay tuned for the projects that come out of it."
+    ]
+  },
   "about": [
     {
       "label": "Who I am",
@@ -36,7 +48,7 @@
   "outside": [
     {
       "title": "Health",
-      "text": "I train full body every other day and I care about what I eat. I love kiwis. In high school I swam varsity."
+      "text": "My favorite way to train is full body, every other day, and I care about what I eat. I love kiwis. In high school I swam varsity."
     },
     {
       "title": "Faith",
@@ -44,7 +56,7 @@
     },
     {
       "title": "The shop",
-      "text": "In 2022 I started a resale shop with $25. I’ve filled more than 600 orders since, and running it gave me a reason to build small tools I’d actually use."
+      "text": "In 2022 I started a resale shop with $25 and filled more than 600 orders. I’m not running it anymore, but I loved it, and it gave me a reason to build small tools I’d actually use."
     },
     {
       "title": "Quant",
@@ -81,13 +93,6 @@
     "Gates Scholarship Semifinalist",
     "MITES Semester scholar, 2025"
   ],
-  "honorsFigure": {
-    "file": "about-skillsusa.jpg",
-    "width": 1024,
-    "height": 682,
-    "alt": "Six students in red SkillsUSA jackets wearing medals. Daniel, in the center, holds a banner that reads State Champion, Chapter Business Procedure, 2026.",
-    "caption": "State champions in Chapter Business Procedure at SkillsUSA California, 2026."
-  },
   "links": [
     {
       "label": "GitHub",

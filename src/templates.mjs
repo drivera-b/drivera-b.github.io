@@ -24,7 +24,7 @@ export function page({ site, title, description, root, current, body, script, re
   <script>try { if (localStorage.getItem("theme") === "dark") document.documentElement.dataset.theme = "dark"; } catch {}</script>
   <link rel="icon" href="${root}assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="${root}assets/fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="${root}assets/fonts/bodoni-moda-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="${root}assets/fonts/old-standard-tt-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="${root}assets/site.css">
   <script src="${root}assets/theme.js" defer></script>
   ${script ? `<script src="${root}assets/${script}" defer></script>` : ""}
@@ -91,8 +91,8 @@ function figureBlock(figure, root, number, options) {
 }
 
 // A personal photo with a short caption, used on the About page.
-function photo(figure, root, className = "photo") {
-  return `<figure class="${className}">
+function photo(figure, root) {
+  return `<figure class="photo">
           <div class="plate">${image(figure, root)}</div>
           <figcaption>${escapeHtml(figure.caption)}</figcaption>
         </figure>`;
@@ -144,7 +144,18 @@ export function home(site, featured) {
     <ul class="entries" role="list">
       ${featured.map(project => featuredEntry(project, "./")).join("\n      ")}
     </ul>
-  </section>`;
+  </section>${site.now ? `
+  <section class="now" aria-labelledby="now-heading">
+    <div class="section-header">
+      <h2 id="now-heading">${escapeHtml(site.now.label)}</h2>
+    </div>
+    <div class="now-body">
+      ${site.now.symbol ? `<p class="now-symbol"><span class="symbol" aria-hidden="true">${escapeHtml(site.now.symbol.glyph)}</span><span class="symbol-caption"><strong>${escapeHtml(site.now.symbol.name)}</strong>, ${escapeHtml(site.now.symbol.meaning)}</span></p>` : ""}
+      <div class="now-text">
+        ${site.now.paragraphs.map((paragraph, index) => `<p${index === 0 ? ' class="lede"' : ""}>${escapeHtml(paragraph)}</p>`).join("\n        ")}
+      </div>
+    </div>
+  </section>` : ""}`;
 }
 
 function indexRow(project, root) {
@@ -183,6 +194,14 @@ export function about(site) {
         ${block.paragraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join("\n        ")}
       </div>
     </section>`);
+  if (site.now) {
+    rows.push(`<section class="nb-row">
+      <h2 class="nb-label">${escapeHtml(site.now.label)}</h2>
+      <div class="nb-body">
+        ${site.now.paragraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join("\n        ")}
+      </div>
+    </section>`);
+  }
   if (site.outside?.length) {
     rows.push(`<section class="nb-row">
       <h2 class="nb-label">Outside the work</h2>
@@ -203,7 +222,6 @@ export function about(site) {
       <ul class="plain-list nb-body">
         ${site.honors.map(honor => `<li>${escapeHtml(honor)}</li>`).join("\n        ")}
       </ul>
-      ${site.honorsFigure ? photo(site.honorsFigure, "../", "photo photo-wide") : ""}
     </section>`);
   }
   rows.push(`<section class="nb-row">

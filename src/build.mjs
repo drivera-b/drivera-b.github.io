@@ -89,7 +89,9 @@ if (site.hero) {
 }
 
 for (const photo of site.photos ?? []) await checkFigure(photo, "content/site.json");
-if (site.honorsFigure) await checkFigure(site.honorsFigure, "content/site.json");
+if (site.now && (!site.now.label || !site.now.paragraphs?.length || (site.now.symbol && !site.now.symbol.glyph))) {
+  throw new Error("content/site.json: now needs a label and at least one paragraph");
+}
 
 await rm(dist, { recursive: true, force: true });
 await cp(new URL("public/", base), dist, { recursive: true });
