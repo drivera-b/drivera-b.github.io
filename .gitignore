@@ -1,2 +1,4 @@
 dist/
+dist-review/
 .DS_Store
+review/

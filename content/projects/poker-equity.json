@@ -1,11 +1,25 @@
 {
   "title": "Monte Carlo Poker Equity Simulator",
   "year": 2025,
-  "topics": ["Modeling", "Software"],
+  "topics": [
+    "Modeling",
+    "Software"
+  ],
   "summary": "My MITES Semester project uses repeated deals to estimate Texas Hold’em equity from known cards.",
   "question": "How much of the pot is a hand worth when some of the cards are still unknown?",
+  "symbol": {
+    "glyph": "Ω",
+    "name": "omega",
+    "meaning": "the set of every way the unseen cards could fall."
+  },
   "sections": [
-    { "title": "What I built", "text": "The simulator samples unseen cards, finds each player’s best five-card hand, and compares the ranks with exact tie-break rules. A fixed random seed lets a scenario be rerun. I separated the Python simulation from the Streamlit interface." },
-    { "title": "What I learned", "text": "Equity includes the share of the pot you take when a hand ties. Making that distinction meant testing split pots as well as edge cases in hand ranking, from ace-low straights to kicker ties." }
+    {
+      "title": "What I built",
+      "text": "I started from an example C++ program and wrote the simulator in Python. It samples unseen cards, finds each player’s best five-card hand, and compares the ranks with exact tie-break rules. A fixed random seed lets a scenario be rerun. I separated the Python simulation from the Streamlit interface. I presented it at the MITES symposium."
+    },
+    {
+      "title": "What I learned",
+      "text": "Equity includes the share of the pot you take when a hand ties. Making that distinction meant testing split pots as well as edge cases in hand ranking, from ace-low straights to kicker ties."
+    }
   ]
 }

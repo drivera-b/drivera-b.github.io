@@ -2,9 +2,17 @@
   "title": "Swarm Robotics and Resource Allocation",
   "year": 2026,
   "featuredOrder": 2,
-  "topics": ["Robotics", "Modeling"],
+  "topics": [
+    "Robotics",
+    "Modeling"
+  ],
   "summary": "A three-robot experiment on how a crowding penalty affects where agents go and how much reward they collect.",
   "question": "Can a simple crowding penalty spread robots out without giving up too much reward?",
+  "symbol": {
+    "glyph": "λ",
+    "name": "lambda",
+    "meaning": "the crowding penalty each robot weighs against a zone’s value."
+  },
   "figure": {
     "file": "swarm-tradeoff.png",
     "width": 2579,
@@ -13,12 +21,49 @@
     "caption": "The 24-trial pilot compared three penalty levels. The groups had 2, 20, and 2 complete trials."
   },
   "sections": [
-    { "title": "What I built", "text": "I worked on a Python controller and analysis for three Sphero BOLT robots competing across four zones. The value of each zone changed on a schedule. Each robot weighed a zone’s value against an estimate of how crowded it would be, while the controller logged its choices." },
-    { "title": "What the pilot showed", "text": "The middle penalty was associated with a more even spread across zones and lower co-location, with a drop in average score per decision. At the highest penalty, the score declined further and the spread improved little. That made the middle setting the best observed compromise in this pilot." },
-    { "title": "What I could measure", "text": "The co-location metric is computed from simultaneous zone choices. A setup with independent position tracking could measure actual physical proximity and collisions. The uneven trial counts make this comparison descriptive." }
+    {
+      "title": "Where it started",
+      "text": "Our team of four needed a robotics project for the Palmdale High School STEM Expo. We considered a sorting robot and a sensor navigation system, then chose a swarm competing for limited resources, because the same problem shows up in traffic routing and network load balancing. We expected a higher penalty to keep spreading the robots out."
+    },
+    {
+      "title": "What I built",
+      "text": "I worked on a Python controller and analysis for three Sphero BOLT robots competing across four zones. The value of each zone changed on a schedule. Each robot weighed a zone’s value against an estimate of how crowded it would be, while the controller logged its choices. Getting there took some debugging. The first discovery script could not see the robots until Bluetooth permission was turned on, and the robots drifted in early movement tests.",
+      "formula": {
+        "expression": "utility = resource value − λ × observed crowding",
+        "note": "λ is the crowding penalty. The pilot ran λ = 2, 6, and 10."
+      },
+      "figure": {
+        "file": "swarm-arena.jpg",
+        "width": 1200,
+        "height": 1256,
+        "alt": "Three clear Sphero BOLT robots near the center of a taped cardboard arena on a workbench. A laptop in the foreground shows the trial launcher and its log output.",
+        "caption": "Three Sphero BOLT robots in the cardboard arena. The laptop ran the trial launcher and logged each choice."
+      }
+    },
+    {
+      "title": "What the pilot showed",
+      "text": "The middle penalty was associated with a more even spread across zones and lower co-location, with a drop in average score per decision. At the highest penalty, the score declined further and the spread improved little. That made the middle setting the best observed compromise in this pilot. The project placed 2nd in Robotics at the expo.",
+      "figure": {
+        "file": "swarm-pareto.png",
+        "width": 1417,
+        "height": 1019,
+        "alt": "Scatter plot of system score per decision against co-located robot pairs per decision. The penalty of 2 has the highest score and the most co-location. Penalties of 6 and 10 have about half the co-location, and 6 scores higher than 10.",
+        "caption": "Score against co-location for each penalty. Going from 2 to 6 cut co-location roughly in half. Going from 6 to 10 lowered the score with almost no further change."
+      }
+    },
+    {
+      "title": "What I could measure",
+      "text": "The co-location metric is computed from simultaneous zone choices. A setup with independent position tracking could measure actual physical proximity and collisions. The uneven trial counts make this comparison descriptive."
+    }
   ],
   "links": [
-    { "label": "Code and results", "url": "https://github.com/drivera-b/Swarm-Robotics-as-a-Model-of-Competitive-Resource-Allocation" },
-    { "label": "Research report", "url": "https://github.com/drivera-b/Swarm-Robotics-as-a-Model-of-Competitive-Resource-Allocation/blob/main/docs/research_report.md" }
+    {
+      "label": "Code and results",
+      "url": "https://github.com/drivera-b/Swarm-Robotics-as-a-Model-of-Competitive-Resource-Allocation"
+    },
+    {
+      "label": "Research report",
+      "url": "https://github.com/drivera-b/Swarm-Robotics-as-a-Model-of-Competitive-Resource-Allocation/blob/main/docs/research_report.md"
+    }
   ]
 }

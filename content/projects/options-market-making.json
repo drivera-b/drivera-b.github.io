@@ -1,11 +1,25 @@
 {
   "title": "Options Market-Making Lab",
   "year": 2026,
-  "topics": ["Quant", "Modeling"],
+  "topics": [
+    "Quant",
+    "Modeling"
+  ],
   "summary": "An educational Python simulator for exploring options pricing, discrete hedging, and inventory risk.",
   "question": "What changes when an options hedge can only be adjusted at discrete times and every adjustment has a cost?",
+  "symbol": {
+    "glyph": "Δ",
+    "name": "delta",
+    "meaning": "how much an option’s price moves with the stock, and the quantity the hedge tracks."
+  },
   "sections": [
-    { "title": "What’s in the simulator", "text": "The lab includes European option prices from Black–Scholes, a binomial tree, and seeded Monte Carlo. It also simulates discrete delta hedges and inventory-aware quotes under stylized order flow, with separate accounting for sources of profit and loss." },
-    { "title": "What it can illustrate", "text": "The setup makes it possible to hold a price path fixed and compare hedge frequency or compare quotes while holding the order-flow seed fixed. These are controlled scenarios built on idealized prices and fills." }
+    {
+      "title": "What’s in the simulator",
+      "text": "The lab includes European option prices from Black–Scholes, a binomial tree, and seeded Monte Carlo. It also simulates discrete delta hedges and inventory-aware quotes under stylized order flow, with separate accounting for sources of profit and loss."
+    },
+    {
+      "title": "What it can illustrate",
+      "text": "The setup makes it possible to hold a price path fixed and compare hedge frequency or compare quotes while holding the order-flow seed fixed. These are controlled scenarios built on idealized prices and fills."
+    }
   ]
 }

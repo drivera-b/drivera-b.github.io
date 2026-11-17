@@ -2,9 +2,17 @@
   "title": "SLCE",
   "year": 2026,
   "featuredOrder": 3,
-  "topics": ["Modeling", "Software"],
+  "topics": [
+    "Modeling",
+    "Software"
+  ],
   "summary": "An educational health-modeling prototype that uses Monte Carlo simulation to show how uncertainty propagates through a forecast.",
   "question": "How do you show someone what a health model knows and where its assumptions take over?",
+  "symbol": {
+    "glyph": "π",
+    "name": "pi",
+    "meaning": "the probability a model reports for one person."
+  },
   "figure": {
     "file": "slce-dashboard.png",
     "width": 1600,
@@ -13,11 +21,37 @@
     "caption": "The demo dashboard records the model, simulation horizon, and evidence coverage alongside its estimates."
   },
   "sections": [
-    { "title": "What I built", "text": "I helped develop a Streamlit prototype with a baseline classifier and a separate simulation of possible health trajectories. The labeled UCI Cleveland dataset supports the baseline. NHANES provides population context. The app documents where its inputs come from and shows uncertainty bands across simulations." },
-    { "title": "A modeling choice", "text": "Five-fold evaluation favored logistic regression on probability error among the models we compared. We kept it as the baseline because probability quality mattered for the simulation, and a simpler model made the inputs and assumptions easier to inspect." },
-    { "title": "Where the model is useful", "text": "SLCE is an educational prototype. Its scenarios show how the model responds to defined changes. They do not establish how an intervention would affect an individual’s health or support diagnosis." }
+    {
+      "title": "What I built",
+      "text": "I helped develop a Streamlit prototype with a baseline classifier and a separate simulation of possible health trajectories. The baseline is trained on 303 labeled UCI Cleveland records. 6,161 NHANES records provide population context, and the two datasets stay separate because their labels are not compatible. The app documents where its inputs come from and shows uncertainty bands across simulations. We presented it at the Palmdale High School STEM Expo, where it placed 1st in Computer Science.",
+      "figure": {
+        "file": "slce-simulation-charts.png",
+        "width": 1280,
+        "height": 720,
+        "alt": "SLCE demo showing a table of NHANES percentiles, a fan chart of risk over time with a shaded band from the 5th to the 95th percentile, and a histogram of final risk.",
+        "caption": "Simulation output in the demo. The fan chart shows the median path with a band from the 5th to the 95th percentile. The histogram shows where the simulated paths ended."
+      }
+    },
+    {
+      "title": "A modeling choice",
+      "text": "Five-fold evaluation favored logistic regression on probability error among the three models we compared, with a Brier score of 0.119. We kept it as the baseline because probability quality mattered for the simulation, and a simpler model made the inputs and assumptions easier to inspect.",
+      "figure": {
+        "file": "slce-model-benchmark.png",
+        "width": 2030,
+        "height": 788,
+        "alt": "Two bar charts comparing logistic regression, random forest, and histogram gradient boosting on five-fold ROC-AUC and on Brier score.",
+        "caption": "Five-fold comparison of the three classifiers. Logistic regression had the lowest Brier score. Random forest had a slightly higher ROC-AUC."
+      }
+    },
+    {
+      "title": "Where the model is useful",
+      "text": "SLCE is an educational prototype. Its scenarios show how the model responds to defined changes. They do not establish how an intervention would affect an individual’s health or support diagnosis."
+    }
   ],
   "links": [
-    { "label": "Code and validation", "url": "https://github.com/drivera-b/SCLE" }
+    {
+      "label": "Code and validation",
+      "url": "https://github.com/drivera-b/SCLE"
+    }
   ]
 }

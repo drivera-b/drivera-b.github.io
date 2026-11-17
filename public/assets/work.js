@@ -1,33 +1,34 @@
 const filter = document.querySelector(".work-filter");
-const topic = document.querySelector("#work-topic");
+const chips = [...document.querySelectorAll(".work-filter .chip")];
 const count = document.querySelector("#work-count");
-const rows = document.querySelectorAll("#work-projects > .project-row");
+const rows = document.querySelectorAll("#work-projects > .index-row");
 
-function updateProjects() {
+function showTopic(topic) {
   let visible = 0;
   for (const row of rows) {
-    const topics = row.dataset.topics.split("|");
-    row.hidden = Boolean(topic.value) && !topics.includes(topic.value);
+    row.hidden = Boolean(topic) && !row.dataset.topics.split("|").includes(topic);
     if (!row.hidden) visible += 1;
   }
-  count.textContent = `${visible} ${visible === 1 ? "project" : "projects"}`;
+  for (const chip of chips) {
+    chip.setAttribute("aria-pressed", String(chip.dataset.topic === topic));
+  }
+  count.textContent = `${visible} ${visible === 1 ? "entry" : "entries"}`;
 }
 
-const url = new URL(window.location.href);
-const initialTopic = url.searchParams.get("topic");
-if ([...topic.options].some(option => option.value === initialTopic)) {
-  topic.value = initialTopic;
-}
-updateProjects();
+const requested = new URL(window.location.href).searchParams.get("topic") ?? "";
+showTopic(chips.some(chip => chip.dataset.topic === requested) ? requested : "");
 filter.hidden = false;
 
-topic.addEventListener("change", () => {
-  updateProjects();
-  const currentUrl = new URL(window.location.href);
-  if (topic.value) {
-    currentUrl.searchParams.set("topic", topic.value);
-  } else {
-    currentUrl.searchParams.delete("topic");
-  }
-  window.history.replaceState(null, "", currentUrl);
-});
+for (const chip of chips) {
+  chip.addEventListener("click", () => {
+    const topic = chip.dataset.topic;
+    showTopic(topic);
+    const url = new URL(window.location.href);
+    if (topic) {
+      url.searchParams.set("topic", topic);
+    } else {
+      url.searchParams.delete("topic");
+    }
+    window.history.replaceState(null, "", url);
+  });
+}

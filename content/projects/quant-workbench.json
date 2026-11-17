@@ -3,9 +3,17 @@
   "year": 2025,
   "period": "2025–present",
   "featuredOrder": 1,
-  "topics": ["Quant", "Software"],
+  "topics": [
+    "Quant",
+    "Software"
+  ],
   "summary": "A Python research workflow for testing how intraday futures ideas hold up under costs, fill uncertainty, and account rules.",
   "question": "How sensitive is a promising backtest to the fills and costs it assumes?",
+  "symbol": {
+    "glyph": "α",
+    "name": "alpha",
+    "meaning": "the edge a strategy claims before costs and fills test it."
+  },
   "figure": {
     "file": "workbench-execution-stress.svg",
     "width": 920,
@@ -14,12 +22,49 @@
     "caption": "Execution stress in a simulated account lifecycle. The chart comes from the public workbench."
   },
   "sections": [
-    { "title": "What I built", "text": "I assembled a research workflow around a fixed historical benchmark, later evaluation windows, and checks that isolate the effect of changing a policy or assumption. The public workbench includes trade summaries, bootstrap intervals, lifecycle simulations, and reports that can be rebuilt from the included artifacts." },
-    { "title": "What the analysis showed", "text": "In the published stress scenarios, a small added cost had less impact than degrading fills across the simulated trade stream. That made execution quality a priority for subsequent evaluation. The result depends on the historical trade sample and how the fill degradation was modeled." },
-    { "title": "What the evidence covers", "text": "The public release documents historical analysis and simulation. Real-world fill behavior and live profitability would require separate evidence." }
+    {
+      "title": "Where it started",
+      "text": "I started studying NQ and ES futures on my own in 2021. The workbench is what that turned into: a way to test an idea against a benchmark I freeze before I look at recent results."
+    },
+    {
+      "title": "What I built",
+      "text": "I assembled a research workflow around a fixed historical benchmark, later evaluation windows, and checks that isolate the effect of changing a policy or assumption. The public workbench includes trade summaries, bootstrap intervals, lifecycle simulations, and reports that can be rebuilt from the included artifacts.",
+      "figure": {
+        "file": "workbench-window-checks.svg",
+        "width": 920,
+        "height": 330,
+        "alt": "Bar chart of expectancy per trade for recent windows of 20, 30, 45, 60, and 90 sessions. The 45 and 90 session windows are labeled on track. The other three are labeled inconclusive.",
+        "caption": "Expectancy per trade in recent windows of 20 to 90 sessions, each checked against the frozen benchmark. Three of the five windows were inconclusive."
+      }
+    },
+    {
+      "title": "What the analysis showed",
+      "text": "In the published stress scenarios, a small added cost had less impact than degrading fills across the simulated trade stream. That made execution quality a priority for subsequent evaluation. The result depends on the historical trade sample and how the fill degradation was modeled.",
+      "figure": {
+        "file": "workbench-firm-comparison.svg",
+        "width": 980,
+        "height": 360,
+        "alt": "Horizontal bar chart of simulated lifecycle value for the same trade stream under five account rule sets. Four are positive and one is slightly negative.",
+        "caption": "The same simulated trade stream under five account rule sets from the public workbench. Simulated lifecycle value ranged from about $3,741 to a loss of about $166."
+      }
+    },
+    {
+      "title": "What I threw out",
+      "text": "Some branches looked good in a first backtest and then failed a replay on finer data or the execution stress test. I dropped them. The public ablation table shows which ones. The project has 52 automated tests."
+    },
+    {
+      "title": "What the evidence covers",
+      "text": "The public release documents historical analysis and simulation. Real-world fill behavior and live profitability would require separate evidence."
+    }
   ],
   "links": [
-    { "label": "Public repository", "url": "https://github.com/drivera-b/quant-workbench" },
-    { "label": "Research case study", "url": "https://github.com/drivera-b/quant-workbench/blob/main/CASE_STUDY.md" }
+    {
+      "label": "Public repository",
+      "url": "https://github.com/drivera-b/quant-workbench"
+    },
+    {
+      "label": "Research case study",
+      "url": "https://github.com/drivera-b/quant-workbench/blob/main/CASE_STUDY.md"
+    }
   ]
 }
