@@ -7,7 +7,7 @@ export function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
-export function page({ site, title, description, root, current, body, script, review }) {
+export function page({ site, title, description, root, current, body, script, module, review }) {
   const nav = [
     { id: "home", label: "Home", path: "" },
     { id: "work", label: "Work", path: "work/" },
@@ -27,7 +27,7 @@ export function page({ site, title, description, root, current, body, script, re
   <link rel="preload" href="${root}assets/fonts/bodoni-moda-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="${root}assets/site.css">
   <script src="${root}assets/theme.js" defer></script>
-  ${script ? `<script src="${root}assets/${script}" defer></script>` : ""}
+  ${script ? `<script src="${root}assets/${script}" defer></script>` : ""}${module ? `<script type="module" src="${root}assets/${module}"></script>` : ""}
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -119,7 +119,37 @@ function featuredEntry(project, root) {
       </li>`;
 }
 
-export function home(site, featured) {
+// The optional game on the home page. Without JavaScript only the description shows.
+function marketSection(market, projects) {
+  const related = (market.related ?? []).map(slug => projects.find(project => project.slug === slug)).filter(Boolean);
+  return `
+  <section class="market" id="market" aria-labelledby="market-heading">
+    <div class="section-header">
+      <h2 id="market-heading">${escapeHtml(market.title)}</h2>
+      ${market.meta ? `<span class="meta">${escapeHtml(market.meta)}</span>` : ""}
+    </div>
+    <div class="market-body">
+      <div class="market-text">
+        ${market.symbols?.length ? `<p class="market-symbols" aria-hidden="true">${market.symbols.map(glyph => `<span class="symbol">${escapeHtml(glyph)}</span>`).join("")}</p>` : ""}
+        <p class="entry-question">${escapeHtml(market.question)}</p>
+        <p class="entry-summary">${escapeHtml(market.intro)}</p>
+        <details class="market-rules">
+          <summary>${escapeHtml(market.rulesLabel ?? "How it works")}</summary>
+          <div class="market-rules-body">
+            ${market.rules.map(rule => `<p>${escapeHtml(rule)}</p>`).join("\n            ")}
+            ${market.formula ? formulaBlock(market.formula) : ""}
+            ${market.note ? `<p class="market-note">${escapeHtml(market.note)}</p>` : ""}
+          </div>
+        </details>
+        ${related.length ? `<p class="market-related">Related work: ${related.map(project => `<a href="./work/${project.slug}/">${escapeHtml(project.title)}</a>`).join(", ")}</p>` : ""}
+        <noscript><p class="market-note">The game needs JavaScript to deal the hands.</p></noscript>
+      </div>
+      <div class="plate market-table" id="market-table" hidden></div>
+    </div>
+  </section>`;
+}
+
+export function home(site, featured, projects = featured) {
   const hero = site.hero;
   const heroLink = hero?.project
     ? ` <a href="./work/${escapeHtml(hero.project)}/">${escapeHtml(hero.linkLabel ?? "Read more")}</a>`
@@ -144,7 +174,7 @@ export function home(site, featured) {
     <ul class="entries" role="list">
       ${featured.map(project => featuredEntry(project, "./")).join("\n      ")}
     </ul>
-  </section>${site.now ? `
+  </section>${site.market ? marketSection(site.market, projects) : ""}${site.now ? `
   <section class="now" aria-labelledby="now-heading">
     <div class="section-header">
       <h2 id="now-heading">${escapeHtml(site.now.label)}</h2>

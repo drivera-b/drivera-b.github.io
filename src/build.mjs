@@ -93,13 +93,21 @@ if (site.now && (!site.now.label || !site.now.paragraphs?.length || (site.now.sy
   throw new Error("content/site.json: now needs a label and at least one paragraph");
 }
 
+if (site.market) {
+  const { title, question, intro, rules, related = [] } = site.market;
+  if (!title || !question || !intro || !rules?.length) throw new Error("content/site.json: market needs a title, question, intro, and rules");
+  for (const slug of related) {
+    if (!projects.some(project => project.slug === slug)) throw new Error(`Market game links to unknown project ${slug}`);
+  }
+}
+
 await rm(dist, { recursive: true, force: true });
 await cp(new URL("public/", base), dist, { recursive: true });
 await writeFile(new URL(".nojekyll", dist), "");
 
 await writePage("./", {
   site, title: site.name, description: site.intro, root: "./", current: "home",
-  body: home(site, featured),
+  body: home(site, featured, projects), module: site.market ? "market.js" : undefined,
 });
 await writePage("work/", {
   site, title: `Work | ${site.name}`, description: site.workIntro, root: "../", current: "work",

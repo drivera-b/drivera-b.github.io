@@ -17,6 +17,32 @@
     }
   },
   "workIntro": "Experiments, simulations, and tools I’ve built. Each project page has the question I started with and what came out of it.",
+  "market": {
+    "title": "Make a market",
+    "symbols": [
+      "Δ",
+      "Ω"
+    ],
+    "meta": "A game, about two minutes",
+    "question": "What is this hand worth, and how sure are you?",
+    "intro": "Two poker hands are dealt face up. You quote a price on hand A, and a trader decides whether to take the other side. Five hands.",
+    "rulesLabel": "How it works",
+    "rules": [
+      "Hand A’s fair value is its share of the pot, out of 100, averaged over every way the rest of the board can come. A win counts 1 and a tie counts a half. Ace-king of spades against two red queens before the flop is worth 46.2.",
+      "You quote a bid and an ask. The trader sells to you at your bid if they think the hand is worth less, and buys from you at your ask if they think it is worth more. Sell above fair value or buy below it and you make the difference. The other way round, you lose it.",
+      "One trader in three is sharp and knows fair value exactly. The rest are guessing.",
+      "Quote too wide and nobody trades. Quote too tight around the wrong number and the sharp trader takes your money."
+    ],
+    "formula": {
+      "expression": "belief = fair value + ε,  ε ~ N(0, 8²)",
+      "note": "For a sharp trader, ε = 0."
+    },
+    "note": "A stylized game: one trader and one contract per hand, no fees.",
+    "related": [
+      "poker-equity",
+      "options-market-making"
+    ]
+  },
   "now": {
     "label": "Currently exploring",
     "symbol": {

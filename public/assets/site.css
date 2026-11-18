@@ -165,6 +165,7 @@ a:hover { text-decoration-thickness: 2px; }
   border-radius: var(--radius);
 }
 .skip-link:not(:focus) { clip-path: inset(50%); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 .review-banner {
   padding: 0.45rem var(--gutter);
@@ -283,6 +284,114 @@ figcaption { margin-top: 0.7rem; max-width: 42rem; color: var(--muted); font-siz
 .entry-summary { margin-top: 0.6rem; color: var(--muted); font-size: 0.95rem; line-height: 1.5; }
 .entry-figure { transition: border-color 0.15s ease; }
 .entry-figure:hover { border-color: var(--accent); }
+
+/* Home: the market game. Its table is a plate, so it keeps light-paper colors in the dark theme too. */
+
+.market { margin-top: clamp(3rem, 6vw, 4.5rem); scroll-margin-top: 1rem; }
+.market .section-header .meta { color: var(--muted); }
+.market-body { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; gap: 1.75rem clamp(1.5rem, 4vw, 3.5rem); padding-top: 1.75rem; }
+.market-live .market-body { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+.market-text { max-width: 34rem; }
+.market-symbols { display: flex; gap: 0.6rem; }
+.market-text .entry-question { font-size: 1.25rem; }
+.market-rules { margin-top: 1.1rem; }
+.market-rules summary { width: fit-content; color: var(--accent); cursor: pointer; }
+.market-rules-body { margin-top: 0.8rem; font-size: 0.95rem; line-height: 1.5; }
+.market-rules-body > * + * { margin-top: 0.7rem; }
+.market-rules .formula-expression { font-size: 1.1rem; }
+.market-note, .market-related { color: var(--muted); font-size: 0.9rem; }
+.market-related, .market-text noscript p { margin-top: 1rem; }
+
+.market-table {
+  --ink: #0e1424;
+  --muted: #545c6e;
+  --accent: #1b3bbb;
+  --on-accent: #fbfbf9;
+  --line: #d8dce6;
+  --wash: rgb(27 59 187 / 0.07);
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+  color: var(--ink);
+}
+.mt-stage { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.1rem; }
+.mt-top, .mt-label, .mt-field, .mt-scores { font-family: var(--mono); font-size: 0.72rem; font-variant-numeric: tabular-nums; }
+.mt-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.2rem 1rem; color: var(--muted); }
+.mt-top span:first-child { color: var(--ink); }
+.mt-hands { display: flex; flex-wrap: wrap; align-items: end; gap: 0.8rem 1.1rem; }
+.mt-group { display: grid; gap: 0.35rem; }
+.mt-label { color: var(--muted); }
+.mt-vs { align-self: end; padding-bottom: 1.05rem; color: var(--muted); font-style: italic; }
+.cards { display: flex; gap: 0.35rem; }
+.card {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 0.2rem;
+  width: 2.5rem;
+  height: 3.4rem;
+  color: #0e1424;
+  background: #fff;
+  border: 1px solid #c5cbd9;
+  border-radius: 4px;
+}
+.card-red { color: #b3261e; }
+.card-rank { font-family: var(--display); font-size: 1.2rem; font-weight: 600; line-height: 1; font-variant-numeric: lining-nums; }
+.card-suit { width: 0.95rem; height: 0.95rem; fill: currentColor; }
+.card-empty { background: none; border-style: dashed; }
+
+.mt-form { display: grid; gap: 0.7rem; }
+.mt-prompt { font-size: 1.08rem; }
+.mt-fields { display: flex; flex-wrap: wrap; align-items: end; gap: 0.7rem; }
+.mt-field { display: grid; gap: 0.25rem; color: var(--muted); }
+.mt-field input {
+  width: 5rem;
+  padding: 0.45rem 0.55rem;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid #aab1c3;
+  border-radius: var(--radius);
+  font: 500 0.9rem var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+.mt-field input:read-only { background: none; border-color: var(--line); }
+.mt-button {
+  padding: 0.5rem 1.1rem;
+  color: var(--on-accent);
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  font: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+.mt-button:hover { background: #142e96; }
+.mt-button:active { transform: translateY(1px); }
+.mt-button:disabled { opacity: 0.6; cursor: default; }
+.mt-hint, .mt-note { color: var(--muted); font-size: 0.88rem; line-height: 1.45; }
+.mt-error { color: #a3261c; font-size: 0.92rem; }
+
+.mt-result { display: grid; justify-items: start; gap: 0.7rem; padding-top: 1.1rem; border-top: 1px solid var(--line); }
+.mt-headline { font-size: 1.12rem; font-weight: 600; line-height: 1.35; }
+.mt-trader { color: var(--muted); font-size: 0.95rem; line-height: 1.45; }
+.mt-plot { width: 100%; }
+.mt-plot svg { display: block; width: 100%; height: 10.5rem; }
+.mt-plot figcaption { margin-top: 0.4rem; font-size: 0.82rem; }
+.mt-plot text { fill: var(--muted); font: 10.5px var(--mono); }
+.mp-grid { stroke: var(--line); stroke-width: 1; }
+.mp-band { fill: var(--wash); }
+.mp-quote { stroke: #8f97aa; stroke-width: 1; }
+.mp-fair { stroke: var(--accent); stroke-width: 1.25; stroke-dasharray: 5 4; }
+.mt-plot .mp-fair-label { fill: var(--accent); }
+.mp-run { fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-linejoin: round; }
+.mp-dot { fill: var(--ink); }
+
+.mt-total { font-family: var(--display); font-size: 1.7rem; font-weight: 600; line-height: 1.15; }
+.mt-scores { width: 100%; border-collapse: collapse; }
+.mt-scores th, .mt-scores td { padding: 0.45rem 0.5rem 0.45rem 0; text-align: left; font-weight: 400; white-space: nowrap; }
+.mt-scores thead th { color: var(--muted); border-bottom: 1px solid var(--ink); }
+.mt-scores tbody th, .mt-scores td { border-bottom: 1px solid var(--line); }
+.mt-scores th:last-child, .mt-scores td:last-child { padding-right: 0; text-align: right; }
+.mt-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1.3rem; }
 
 /* Work index */
 
@@ -416,6 +525,7 @@ figcaption { margin-top: 0.7rem; max-width: 42rem; color: var(--muted); font-siz
   .hero-figure { width: 10.5rem; }
 
   .entry { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
+  .market-live .market-body { grid-template-columns: minmax(0, 1fr); }
   .entry-figure { order: -1; }
 
   .index-row {
