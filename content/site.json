@@ -25,7 +25,7 @@
     ],
     "meta": "A game, about two minutes",
     "question": "What is this hand worth, and how sure are you?",
-    "intro": "Two poker hands are dealt face up. You quote a price on hand A, and a trader decides whether to take the other side. Five hands.",
+    "intro": "Two poker hands are dealt face up. You quote a price on hand A, and a trader decides whether to take the other side. A game is five hands.",
     "rulesLabel": "How it works",
     "rules": [
       "Hand A’s fair value is its share of the pot, out of 100, averaged over every way the rest of the board can come. A win counts 1 and a tie counts a half. Ace-king of spades against two red queens before the flop is worth 46.2.",
@@ -41,7 +41,37 @@
     "related": [
       "poker-equity",
       "options-market-making"
+    ],
+    "invite": {
+      "question": "Want to play a market-making game?",
+      "yes": "Yes, deal me in",
+      "link": "Or open the Games page"
+    },
+    "steps": [
+      {
+        "title": "Two hands, face up",
+        "paragraphs": [
+          "Hand A’s fair value is its share of the pot, out of 100, averaged over every way the board can finish. Ace-king of spades against two red queens is worth 46.2."
+        ]
+      },
+      {
+        "title": "You quote two prices",
+        "paragraphs": [
+          "A bid you would buy at and an ask you would sell at. Here the market is 40 to 52.",
+          "In the game you only see fair value after you quote."
+        ]
+      },
+      {
+        "title": "A trader answers",
+        "paragraphs": [
+          "They buy at your ask if they think the hand is worth more, and sell at your bid if they think it is worth less. This one thinks 58.",
+          "One trader in three knows the exact value. Quote too wide and nobody trades. Quote too tight around the wrong number and the sharp one takes your money."
+        ]
+      }
     ]
+  },
+  "games": {
+    "intro": "Short games built on the ideas in my projects. There’s one so far."
   },
   "now": {
     "label": "Currently exploring",

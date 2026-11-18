@@ -18,6 +18,10 @@ export function card(rank, suit) {
   return rank * 4 + suit;
 }
 
+// The worked example in the home page walkthrough: ace-king of spades against two red queens.
+// test/poker.test.js checks these numbers against the engine and against the words in content/site.json.
+export const EXAMPLE = { a: [card(12, 0), card(11, 0)], b: [card(10, 1), card(10, 2)], fair: 46.2, bid: 40, ask: 52, belief: 58 };
+
 // Lookup tables over 13-bit rank masks.
 const MASKS = 1 << 13;
 const STRAIGHT = new Int8Array(MASKS).fill(-1); // top rank of the best straight, or -1

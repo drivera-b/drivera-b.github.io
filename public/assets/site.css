@@ -285,9 +285,20 @@ figcaption { margin-top: 0.7rem; max-width: 42rem; color: var(--muted); font-siz
 .entry-figure { transition: border-color 0.15s ease; }
 .entry-figure:hover { border-color: var(--accent); }
 
-/* Home: the market game. Its table is a plate, so it keeps light-paper colors in the dark theme too. */
+/* Home: the invitation to play. It opens a small table with a walkthrough, then the game. */
+
+.invite { margin-bottom: clamp(2.5rem, 6vw, 4rem); scroll-margin-top: 1rem; }
+.invite-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.7rem 1.4rem; padding: 0.45rem 0 0.45rem 1.2rem; border-left: 2px solid var(--accent); }
+.invite-symbols { display: flex; gap: 0.45rem; }
+.invite-symbols .symbol { font-size: 1.7rem; }
+.invite-question { font-size: 1.35rem; }
+.invite-link { font-size: 0.95rem; }
+.invite-panel { max-width: 36rem; margin-top: 1.25rem; animation: mt-rise 0.35s ease-out backwards; }
+
+/* The market game. Its table is a plate, so it keeps light-paper colors in the dark theme too. */
 
 .market { margin-top: clamp(3rem, 6vw, 4.5rem); scroll-margin-top: 1rem; }
+.page-intro + .market { margin-top: 0; }
 .market .section-header .meta { color: var(--muted); }
 .market-body { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; gap: 1.75rem clamp(1.5rem, 4vw, 3.5rem); padding-top: 1.75rem; }
 .market-live .market-body { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
@@ -364,7 +375,7 @@ figcaption { margin-top: 0.7rem; max-width: 42rem; color: var(--muted); font-siz
   cursor: pointer;
   transition: background-color 0.15s ease;
 }
-.mt-button:hover { background: #142e96; }
+.mt-button:hover { filter: brightness(0.86); }
 .mt-button:active { transform: translateY(1px); }
 .mt-button:disabled { opacity: 0.6; cursor: default; }
 .mt-hint, .mt-note { color: var(--muted); font-size: 0.88rem; line-height: 1.45; }
@@ -392,6 +403,42 @@ figcaption { margin-top: 0.7rem; max-width: 42rem; color: var(--muted); font-siz
 .mt-scores tbody th, .mt-scores td { border-bottom: 1px solid var(--line); }
 .mt-scores th:last-child, .mt-scores td:last-child { padding-right: 0; text-align: right; }
 .mt-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1.3rem; }
+.mt-link { padding: 0; color: var(--accent); background: none; border: 0; font: inherit; font-size: 0.95rem; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; cursor: pointer; }
+.mt-link:hover { text-decoration-thickness: 2px; }
+
+/* Walkthrough: one idea per step, each with a small moving picture. */
+.mt-step-title { font-size: 1.5rem; }
+.mt-step-text { max-width: 31rem; }
+.mt-share { display: grid; gap: 0.35rem; max-width: 22rem; }
+.mt-share-labels { display: flex; justify-content: space-between; color: var(--muted); font: 0.72rem var(--mono); }
+.mt-share-labels span:first-child { color: var(--accent); }
+.mt-share-bar { height: 0.55rem; background: #c9cfdc; border-radius: 2px; overflow: hidden; }
+.mt-share-bar span { display: block; height: 100%; background: var(--accent); transform-origin: left; animation: mt-grow 0.7s 0.45s ease-out backwards; }
+.mt-line { position: relative; height: 4.6rem; max-width: 30rem; }
+.ml-track { position: absolute; inset: 50% 0 auto; height: 1px; background: #8f97aa; }
+.ml-band { position: absolute; top: calc(50% - 0.55rem); height: 1.1rem; background: rgb(27 59 187 / 0.14); transform-origin: left; animation: mt-grow 0.6s 0.2s ease-out backwards; }
+.ml-mark { position: absolute; top: 0; bottom: 0; width: 0; }
+.ml-mark::before { content: ""; position: absolute; left: -0.5px; top: calc(50% - 0.55rem); height: 1.1rem; border-left: 1px solid var(--ink); }
+.ml-mark span { position: absolute; left: 0; transform: translateX(-50%); color: var(--muted); font: 0.72rem var(--mono); white-space: nowrap; }
+.ml-above span { top: 0; }
+.ml-below span { bottom: 0; }
+.ml-quote { animation: mt-fade 0.3s 0.7s backwards; }
+.ml-fair::before { top: calc(50% - 0.85rem); height: 1.7rem; border-left: 1.5px dashed var(--accent); }
+.ml-fair span { color: var(--accent); }
+.ml-trader::before { left: -0.3rem; top: calc(50% - 0.3rem); width: 0.6rem; height: 0.6rem; background: var(--ink); border: 0; border-radius: 50%; }
+.ml-trader span { color: var(--ink); }
+.ml-trader { animation: mt-drop 0.45s 0.3s ease-out backwards; }
+.mt-line-still .ml-band, .mt-line-still .ml-quote { animation: none; }
+.mt-late { animation: mt-fade 0.4s 0.9s backwards; }
+
+/* Small motions: cards land one after another, results rise into place. */
+.mt-hands .card:not(.card-empty), .mt-board .card:not(.card-empty) { animation: mt-deal 0.32s cubic-bezier(0.2, 0.7, 0.2, 1) backwards; }
+.mt-result, .mt-total { animation: mt-rise 0.3s ease-out backwards; }
+@keyframes mt-deal { from { opacity: 0; transform: translateY(-0.6rem) rotate(-4deg); } }
+@keyframes mt-rise { from { opacity: 0; transform: translateY(0.4rem); } }
+@keyframes mt-drop { from { opacity: 0; transform: translateY(-0.7rem); } }
+@keyframes mt-grow { from { transform: scaleX(0); } }
+@keyframes mt-fade { from { opacity: 0; } }
 
 /* Work index */
 
@@ -551,6 +598,7 @@ figcaption { margin-top: 0.7rem; max-width: 42rem; color: var(--muted); font-siz
 /* Wide charts stay legible on phones: the plate pans sideways. */
 @media (max-width: 40rem) {
   .tagline { display: none; }
+  .site-header nav { gap: 0.4rem 1.05rem; }
   .photo-strip { grid-template-columns: minmax(0, 1fr); max-width: 22rem; }
   .figure-wide .plate, .figure-medium .plate { overflow-x: auto; overscroll-behavior-x: contain; }
   .figure-wide .plate img { width: 44rem; max-width: none; }
@@ -558,5 +606,5 @@ figcaption { margin-top: 0.7rem; max-width: 42rem; color: var(--muted); font-siz
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { transition: none !important; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
 }

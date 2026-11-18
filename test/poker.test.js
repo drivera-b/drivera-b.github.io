@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
 import {
-  SHARP_CHANCE, TRADER_NOISE,
+  EXAMPLE, SHARP_CHANCE, TRADER_NOISE,
   benchmark, card, dealHand, exactEquity, exactJob, makeRng, makeTrader, rankCards, settle, simulate,
 } from "../public/assets/poker.js";
 
@@ -180,4 +180,18 @@ test("the rules on the page describe the trader the code implements", async () =
   assert.ok(site.market.formula.expression.includes(`N(0, ${TRADER_NOISE}²)`), "noise in the formula");
   assert.ok(SHARP_CHANCE === 1 / 3 && rules.includes("One trader in three is sharp"), "share of sharp traders");
   assert.ok(rules.includes("Ace-king of spades against two red queens before the flop is worth 46.2"), "worked example");
+});
+
+test("the walkthrough example matches the engine and the words on the page", async () => {
+  assert.equal(exactEquity(EXAMPLE.a, EXAMPLE.b).toFixed(1), EXAMPLE.fair.toFixed(1));
+  const outcome = settle(EXAMPLE);
+  assert.equal(outcome.side, "sold");
+  assert.equal(outcome.price, 52);
+  assert.equal(outcome.pnl.toFixed(1), "5.8");
+
+  const site = JSON.parse(await readFile(new URL("../content/site.json", import.meta.url), "utf8"));
+  const [hands, quote, trader] = site.market.steps.map(step => step.paragraphs.join(" "));
+  assert.ok(hands.includes(`Ace-king of spades against two red queens is worth ${EXAMPLE.fair}`));
+  assert.ok(quote.includes(`${EXAMPLE.bid} to ${EXAMPLE.ask}`));
+  assert.ok(trader.includes(`This one thinks ${EXAMPLE.belief}`));
 });

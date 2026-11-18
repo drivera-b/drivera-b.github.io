@@ -11,6 +11,7 @@ export function page({ site, title, description, root, current, body, script, mo
   const nav = [
     { id: "home", label: "Home", path: "" },
     { id: "work", label: "Work", path: "work/" },
+    ...(site.market ? [{ id: "games", label: "Games", path: "games/" }] : []),
     { id: "about", label: "About", path: "about/" },
   ];
 
@@ -119,8 +120,31 @@ function featuredEntry(project, root) {
       </li>`;
 }
 
-// The optional game on the home page. Without JavaScript only the description shows.
-function marketSection(market, projects) {
+// The home page invitation. Saying yes opens a small table: a short walkthrough, then the game.
+// Without JavaScript only the question and the link to the Games page show.
+function marketInvite(market) {
+  return `
+  <section class="invite" id="market-invite" aria-labelledby="invite-question">
+    <div class="invite-row">
+      ${market.symbols?.length ? `<span class="invite-symbols" aria-hidden="true">${market.symbols.map(glyph => `<span class="symbol">${escapeHtml(glyph)}</span>`).join("")}</span>` : ""}
+      <h2 class="invite-question" id="invite-question">${escapeHtml(market.invite.question)}</h2>
+      <button type="button" class="mt-button" id="market-open" aria-expanded="false" aria-controls="market-panel" hidden>${escapeHtml(market.invite.yes)}</button>
+      <a class="invite-link" href="./games/">${escapeHtml(market.invite.link)}</a>
+    </div>
+    <div class="invite-panel" id="market-panel" hidden>
+      <div class="plate market-table" id="market-table" data-games="./games/"></div>
+      <div id="market-steps" hidden>
+        ${(market.steps ?? []).map(step => `<div data-step>
+          <h3>${escapeHtml(step.title)}</h3>
+          ${step.paragraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join("\n          ")}
+        </div>`).join("\n        ")}
+      </div>
+    </div>
+  </section>`;
+}
+
+// The full game on the Games page. Without JavaScript only the description and rules show.
+function marketSection(market, projects, root) {
   const related = (market.related ?? []).map(slug => projects.find(project => project.slug === slug)).filter(Boolean);
   return `
   <section class="market" id="market" aria-labelledby="market-heading">
@@ -141,7 +165,7 @@ function marketSection(market, projects) {
             ${market.note ? `<p class="market-note">${escapeHtml(market.note)}</p>` : ""}
           </div>
         </details>
-        ${related.length ? `<p class="market-related">Related work: ${related.map(project => `<a href="./work/${project.slug}/">${escapeHtml(project.title)}</a>`).join(", ")}</p>` : ""}
+        ${related.length ? `<p class="market-related">Related work: ${related.map(project => `<a href="${root}work/${project.slug}/">${escapeHtml(project.title)}</a>`).join(", ")}</p>` : ""}
         <noscript><p class="market-note">The game needs JavaScript to deal the hands.</p></noscript>
       </div>
       <div class="plate market-table" id="market-table" hidden></div>
@@ -149,7 +173,7 @@ function marketSection(market, projects) {
   </section>`;
 }
 
-export function home(site, featured, projects = featured) {
+export function home(site, featured) {
   const hero = site.hero;
   const heroLink = hero?.project
     ? ` <a href="./work/${escapeHtml(hero.project)}/">${escapeHtml(hero.linkLabel ?? "Read more")}</a>`
@@ -165,7 +189,7 @@ export function home(site, featured, projects = featured) {
       <div class="plate">${image(hero.image, "./", { eager: true })}</div>
       ${hero.image.caption || heroLink ? `<figcaption>${escapeHtml(hero.image.caption ?? "")}${heroLink}</figcaption>` : ""}
     </figure>` : ""}
-  </section>
+  </section>${site.market?.invite ? marketInvite(site.market) : ""}
   <section class="selected" aria-labelledby="selected-work">
     <div class="section-header">
       <h2 id="selected-work">Selected work</h2>
@@ -174,7 +198,7 @@ export function home(site, featured, projects = featured) {
     <ul class="entries" role="list">
       ${featured.map(project => featuredEntry(project, "./")).join("\n      ")}
     </ul>
-  </section>${site.market ? marketSection(site.market, projects) : ""}${site.now ? `
+  </section>${site.now ? `
   <section class="now" aria-labelledby="now-heading">
     <div class="section-header">
       <h2 id="now-heading">${escapeHtml(site.now.label)}</h2>
@@ -215,6 +239,13 @@ export function work(site, projects) {
   <ul class="index" id="work-projects" role="list">
     ${projects.map(project => indexRow(project, "../")).join("\n    ")}
   </ul>`;
+}
+
+export function games(site, projects) {
+  return `<div class="page-intro">
+    <h1>Games</h1>
+    <p class="lede">${escapeHtml(site.games.intro)}</p>
+  </div>${marketSection(site.market, projects, "../")}`;
 }
 
 export function about(site) {

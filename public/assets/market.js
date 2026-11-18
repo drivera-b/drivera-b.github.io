@@ -1,12 +1,16 @@
-// The "Make a market" game on the home page.
-// The rules text is in content/site.json. The poker and trading logic is in poker.js.
+// The "Make a market" game. It runs in two places:
+// - on the Games page, as the full section with the rules beside it;
+// - on the home page, behind the "Want to play?" invitation, where a short walkthrough comes first.
+// The words are in content/site.json. The poker and trading logic is in poker.js.
 import {
-  BENCHMARK_HALF_WIDTH, RANK_LABELS, RANK_NAMES, SUIT_NAMES,
+  BENCHMARK_HALF_WIDTH, EXAMPLE, RANK_LABELS, RANK_NAMES, SUIT_NAMES,
   benchmark, dealHand, exactJob, makeRng, makeTrader, settle, simulate,
 } from "./poker.js";
 
-const section = document.querySelector("#market");
 const table = document.querySelector("#market-table");
+const section = document.querySelector("#market"); // Games page
+const invite = document.querySelector("#market-invite"); // home page
+const gamesHref = table?.dataset.games ?? ""; // set on the home page only
 
 // Community cards showing in each hand of a game: two before the flop, two on the flop, one on the turn.
 const BOARD_SIZES = [0, 0, 3, 3, 4];
@@ -26,6 +30,8 @@ const signed = value => {
   return `${rounded > 0 ? "+" : rounded < 0 ? "\u2212" : ""}${Math.abs(rounded).toFixed(1)}`;
 };
 const points = value => `${fmt(value)} ${round1(value) === 1 ? "point" : "points"}`;
+const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const randomSeed = () => 1 + Math.floor(Math.random() * 99999);
 
 function el(tag, attributes = {}, ...children) {
   const node = document.createElement(tag);
@@ -51,13 +57,35 @@ function cardNode(card) {
   return node;
 }
 
+let dealt = 0; // position in the current deal, so the cards land one after another
+
 function cardGroup(label, cards, empty = 0) {
-  const row = el("span", { class: "cards" }, ...cards.map(cardNode));
+  const row = el("span", { class: "cards" }, ...cards.map(card => {
+    const node = cardNode(card);
+    node.style.animationDelay = `${dealt * 70}ms`;
+    dealt += 1;
+    return node;
+  }));
   for (let i = 0; i < empty; i += 1) row.append(el("span", { class: "card card-empty", "aria-hidden": "true" }));
   return el("div", { class: "mt-group" }, el("span", { class: "mt-label" }, label), row);
 }
 
-// One announcement area that stays in the page, so screen readers hear each result.
+function handsRow(a, b) {
+  return el("div", { class: "mt-hands" },
+    cardGroup("Hand A", a),
+    el("span", { class: "mt-vs", "aria-hidden": "true" }, "vs"),
+    cardGroup("Hand B", b));
+}
+
+// The sentence that reports a trade, used by the walkthrough and by the game.
+function describe(outcome, fair) {
+  if (outcome.side === "none") return `No trade. Fair value is ${fmt(fair)}.`;
+  const pnl = round1(outcome.pnl);
+  const earned = pnl > 0 ? `made ${points(pnl)}` : pnl < 0 ? `lost ${points(-pnl)}` : "broke even";
+  return `You ${outcome.side} at ${fmt(outcome.price)}. Fair value is ${fmt(fair)}, so you ${earned}.`;
+}
+
+// One announcement area that stays in the page, so screen readers hear each step and result.
 const live = el("p", { class: "visually-hidden", role: "status" });
 const stage = el("div", { class: "mt-stage" });
 
@@ -68,6 +96,80 @@ function seedFromUrl() {
   const seed = Number(new URL(window.location.href).searchParams.get("game"));
   return Number.isInteger(seed) && seed >= 1 && seed <= 99999 ? seed : null;
 }
+
+function topLine(...parts) {
+  return el("p", { class: "mt-top" }, ...parts.map(part => el("span", {}, part)));
+}
+
+/* The walkthrough shown on the home page before the first hand. */
+
+function shareBar(fair) {
+  return el("div", { class: "mt-share", role: "img", "aria-label": `Hand A is worth ${fmt(fair)} out of 100 and hand B ${fmt(100 - fair)}.` },
+    el("div", { class: "mt-share-labels" }, el("span", {}, `Hand A ${fmt(fair)}`), el("span", {}, `Hand B ${fmt(100 - fair)}`)),
+    el("div", { class: "mt-share-bar" }, el("span", { style: `width:${fair}%` })));
+}
+
+// A stretch of the price scale, from 30 to 70, with the example quote on it.
+function priceLine(withTrader) {
+  const { bid, ask, fair, belief } = EXAMPLE;
+  const at = value => `${((value - 30) / 40) * 100}%`;
+  const mark = (value, label, kind) => el("span", { class: `ml-mark ${kind}`, style: `left:${at(value)}` }, el("span", {}, label));
+  return el("div", {
+    class: `mt-line${withTrader ? " mt-line-still" : ""}`,
+    role: "img",
+    "aria-label": `A price scale. Bid ${bid}, ask ${ask}, fair value ${fmt(fair)}${withTrader ? `, and a trader who thinks ${belief}` : ""}.`,
+  },
+    el("span", { class: "ml-track" }),
+    el("span", { class: "ml-band", style: `left:${at(bid)};width:${((ask - bid) / 40) * 100}%` }),
+    mark(bid, `bid ${bid}`, "ml-quote ml-above"),
+    mark(ask, `ask ${ask}`, "ml-quote ml-above"),
+    mark(fair, `fair ${fmt(fair)}`, "ml-fair ml-below"),
+    withTrader && mark(belief, `trader ${belief}`, "ml-trader ml-below"));
+}
+
+function introVisual(index) {
+  if (index === 0) {
+    dealt = 0;
+    return [handsRow(EXAMPLE.a, EXAMPLE.b), shareBar(EXAMPLE.fair)];
+  }
+  if (index === 1) return [priceLine(false)];
+  return [priceLine(true), el("p", { class: "mt-headline mt-late" }, describe(settle(EXAMPLE), EXAMPLE.fair))];
+}
+
+let introStep = 0;
+
+function showIntro(index, focus) {
+  const steps = [...document.querySelectorAll("#market-steps > [data-step]")];
+  if (!steps.length) return startGame(focus);
+  introStep = index;
+  const last = index === steps.length - 1;
+  const title = steps[index].querySelector("h3").textContent;
+  const [first, ...rest] = [...steps[index].querySelectorAll("p")].map(paragraph => paragraph.textContent);
+
+  const next = el("button", { type: "button", class: "mt-button" }, last ? "Deal the first hand" : "Next");
+  next.addEventListener("click", () => (last ? startGame(true) : showIntro(index + 1, true)));
+  const back = index > 0 && el("button", { type: "button", class: "mt-link" }, "Back");
+  if (back) back.addEventListener("click", () => showIntro(index - 1, true));
+  const skip = !last && el("button", { type: "button", class: "mt-link" }, "Skip to the game");
+  if (skip) skip.addEventListener("click", () => startGame(true));
+
+  stage.replaceChildren(
+    topLine("How it works", `${index + 1} of ${steps.length}`),
+    el("h3", { class: "mt-step-title" }, title),
+    el("p", { class: "mt-step-text" }, first),
+    ...introVisual(index),
+    ...rest.map(text => el("p", { class: "mt-hint" }, text)),
+    el("p", { class: "mt-actions" }, next, back, skip),
+  );
+  live.textContent = [title, first, ...rest].join(" ");
+  if (focus) next.focus({ preventScroll: true });
+}
+
+function startGame(focus) {
+  newGame(seedFromUrl() ?? randomSeed(), focus);
+}
+
+/* The game. */
 
 function newGame(seed, focus = false) {
   game = { seed, results: [], index: 0, hand: null };
@@ -93,16 +195,13 @@ function total() {
   return game.results.reduce((sum, result) => sum + result.pnl, 0);
 }
 
-function topLine(...parts) {
-  return el("p", { class: "mt-top" }, ...parts.map(part => el("span", {}, part)));
-}
-
 function showHand(focus) {
   const index = game.index;
   const deal = dealHand(makeRng(game.seed * 1000 + index * 10 + 1), BOARD_SIZES[index]);
   const hand = { index, deal, job: exactJob(deal.a, deal.b, deal.board), pricing: null, locked: false };
   game.hand = hand;
   plot = null;
+  dealt = 0;
 
   const bid = el("input", { id: "mt-bid", name: "bid", type: "text", inputmode: "decimal", autocomplete: "off", "aria-describedby": "mt-hint" });
   const ask = el("input", { id: "mt-ask", name: "ask", type: "text", inputmode: "decimal", autocomplete: "off", "aria-describedby": "mt-hint" });
@@ -125,11 +224,9 @@ function showHand(focus) {
 
   stage.replaceChildren(
     topLine(`Hand ${index + 1} of ${BOARD_SIZES.length}`, `P&L ${signed(total())}`),
-    el("div", { class: "mt-hands" },
-      cardGroup("Hand A", deal.a),
-      el("span", { class: "mt-vs", "aria-hidden": "true" }, "vs"),
-      cardGroup("Hand B", deal.b)),
-    el("div", { class: "mt-board", role: "group", "aria-label": boardLabel }, cardGroup(`Board, ${STREETS[deal.board.length]}`, deal.board, 5 - deal.board.length)),
+    handsRow(deal.a, deal.b),
+    el("div", { class: "mt-board", role: "group", "aria-label": boardLabel },
+      cardGroup(`Board, ${STREETS[deal.board.length]}`, deal.board, 5 - deal.board.length)),
     form,
     result,
   );
@@ -169,7 +266,8 @@ function showHand(focus) {
 
   // Once someone is playing, price the next hand while they think.
   if (index > 0) price(hand);
-  if (focus) bid.focus();
+  live.textContent = "";
+  if (focus) bid.focus({ preventScroll: true });
 }
 
 function reveal(hand, quote, fair, result) {
@@ -181,10 +279,7 @@ function reveal(hand, quote, fair, result) {
   const run = simulate(deal.a, deal.b, deal.board, makeRng(game.seed * 1000 + index * 10 + 3), DEALS);
   game.results.push({ ...quote, fair, belief, sharp: trader.sharp, side: outcome.side, price: outcome.price, pnl });
 
-  const earned = pnl > 0 ? `made ${points(pnl)}` : pnl < 0 ? `lost ${points(-pnl)}` : "broke even";
-  const headline = outcome.side === "none"
-    ? `No trade. Fair value is ${fmt(fair)}.`
-    : `You ${outcome.side} at ${fmt(outcome.price)}. Fair value is ${fmt(fair)}, so you ${earned}.`;
+  const headline = describe(outcome, fair);
   const about = trader.sharp
     ? `This trader was sharp and knew fair value${outcome.side === "none" ? ". It sat inside your market, so there was nothing to take." : "."}`
     : `This trader was guessing and thought hand A was worth ${fmt(belief)}${outcome.side === "none" ? ", which is inside your market." : "."}`;
@@ -217,7 +312,7 @@ function reveal(hand, quote, fair, result) {
 }
 
 function animate(target) {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  if (reducedMotion()) {
     target.progress = 1;
     drawPlot(target);
     return;
@@ -316,7 +411,7 @@ function showSummary() {
     const url = new URL(window.location.href);
     url.searchParams.delete("game");
     window.history.replaceState(null, "", url);
-    newGame(1 + Math.floor(Math.random() * 99999), true);
+    newGame(randomSeed(), true);
   });
   plot = null;
   game.hand = null;
@@ -336,20 +431,45 @@ function showSummary() {
         cell("td", signed(r.pnl)))))),
     el("p", { class: "mt-note" }, `* a sharp trader. The middle of your market missed fair value by ${points(miss)} on average. `
       + `Someone who knew every fair value and quoted ${BENCHMARK_HALF_WIDTH} points either side would have made ${signed(reference)} against the same traders.`),
-    el("p", { class: "mt-actions" }, again, el("a", { href: `?game=${game.seed}#market` }, "Link to this game")),
+    el("p", { class: "mt-actions" }, again,
+      el("a", { href: `${gamesHref}?game=${game.seed}#market` }, "Link to this game"),
+      gamesHref && el("a", { href: gamesHref }, "Games page")),
   );
   live.textContent = verdict;
   again.focus({ preventScroll: true });
 }
 
-if (section && table) {
+/* Start-up. */
+
+if (table) {
   table.replaceChildren(live, stage);
   // Fair value for the first hand is only worked out if someone starts to play.
   for (const type of ["focusin", "pointerdown"]) {
     table.addEventListener(type, () => { if (game?.hand) price(game.hand); });
   }
   new ResizeObserver(() => { if (plot?.svg.isConnected) drawPlot(plot); }).observe(table);
-  newGame(seedFromUrl() ?? 1 + Math.floor(Math.random() * 99999));
-  table.hidden = false;
-  section.classList.add("market-live");
+
+  if (invite) {
+    // Home page: nothing is dealt until someone says yes.
+    const toggle = invite.querySelector("#market-open");
+    const panel = invite.querySelector("#market-panel");
+    const closedLabel = toggle.textContent;
+    toggle.hidden = false;
+    toggle.addEventListener("click", () => {
+      const opening = panel.hidden;
+      panel.hidden = !opening;
+      toggle.setAttribute("aria-expanded", String(opening));
+      toggle.textContent = opening ? "Close" : closedLabel;
+      if (!opening) return;
+      // Focus moves to the Next button, so the walkthrough can be stepped through with Enter.
+      if (!game) showIntro(introStep, true);
+      if (panel.getBoundingClientRect().bottom > window.innerHeight) {
+        invite.scrollIntoView({ block: "start", behavior: reducedMotion() ? "auto" : "smooth" });
+      }
+    });
+  } else {
+    startGame(false);
+    table.hidden = false;
+    section?.classList.add("market-live");
+  }
 }

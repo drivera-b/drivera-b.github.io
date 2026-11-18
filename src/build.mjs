@@ -1,5 +1,5 @@
 import { access, cp, mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
-import { about, home, page, projectPage, work } from "./templates.mjs";
+import { about, games, home, page, projectPage, work } from "./templates.mjs";
 
 // `node src/build.mjs` builds the publishable site into dist/.
 // `node src/build.mjs --candidates` also includes content/candidates/ and
@@ -99,6 +99,10 @@ if (site.market) {
   for (const slug of related) {
     if (!projects.some(project => project.slug === slug)) throw new Error(`Market game links to unknown project ${slug}`);
   }
+  const { invite, steps = [] } = site.market;
+  if (invite && !(invite.question && invite.yes && invite.link)) throw new Error("content/site.json: market.invite needs a question, a yes label, and a link label");
+  if (steps.some(step => !step.title || !step.paragraphs?.length)) throw new Error("content/site.json: each market step needs a title and a paragraph");
+  if (!site.games?.intro) throw new Error("content/site.json: games needs an intro for the Games page");
 }
 
 await rm(dist, { recursive: true, force: true });
@@ -107,12 +111,18 @@ await writeFile(new URL(".nojekyll", dist), "");
 
 await writePage("./", {
   site, title: site.name, description: site.intro, root: "./", current: "home",
-  body: home(site, featured, projects), module: site.market ? "market.js" : undefined,
+  body: home(site, featured), module: site.market ? "market.js" : undefined,
 });
 await writePage("work/", {
   site, title: `Work | ${site.name}`, description: site.workIntro, root: "../", current: "work",
   body: work(site, projects), script: "work.js",
 });
+if (site.market) {
+  await writePage("games/", {
+    site, title: `Games | ${site.name}`, description: site.games.intro, root: "../", current: "games",
+    body: games(site, projects), module: "market.js",
+  });
+}
 await writePage("about/", {
   site, title: `About | ${site.name}`, description: site.about[0].paragraphs[0], root: "../", current: "about",
   body: about(site),
@@ -124,4 +134,4 @@ for (const [index, project] of projects.entries()) {
   });
 }
 
-console.log(`Built ${projects.length} project pages and 3 index pages in ${review ? "dist-review/" : "dist/"}`);
+console.log(`Built ${projects.length} project pages and ${site.market ? 4 : 3} other pages in ${review ? "dist-review/" : "dist/"}`);
