@@ -1,8 +1,9 @@
 /*
   Research-notebook theme.
   Bright paper with a faint quad rule, blue-black ink, one deep ink-blue accent.
-  Bodoni Moda for headings, Newsreader for reading. Greek letters and math come from
-  STIX Two Text. JetBrains Mono sets dates, topics, and figure numbers.
+  Bodoni Moda for headings, Newsreader for reading, Caveat for the handwritten
+  margin notes and questions. Greek letters and math come from STIX Two Text.
+  JetBrains Mono sets dates, topics, and figure numbers.
   The site opens light. theme.js adds an optional dark theme.
   Fonts are self-hosted under assets/fonts/ (SIL Open Font License).
 */
@@ -45,6 +46,13 @@
   unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
 }
 @font-face {
+  font-family: "Caveat";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/caveat-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
   font-family: "JetBrains Mono";
   font-style: normal;
   font-weight: 400 700;
@@ -73,6 +81,7 @@
 
   --serif: "Newsreader", "STIX Two Text", "Iowan Old Style", Georgia, "Times New Roman", serif;
   --display: "Bodoni Moda", "Newsreader", "Didot", Georgia, serif;
+  --hand: "Caveat", "Segoe Print", "Bradley Hand", cursive;
   --math: "STIX Two Text", "STIXGeneral", "Newsreader", Georgia, serif;
   --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
@@ -691,7 +700,7 @@ figcaption { margin-top: 0.7rem; max-width: 42rem; color: var(--muted); font-siz
   row-gap: 1.5rem;
   align-items: baseline;
 }
-.nb-label { font-family: var(--serif); font-size: 1.05rem; font-weight: 600; line-height: 1.3; letter-spacing: 0; color: var(--accent); }
+.nb-label { font-family: var(--hand); font-size: 1.7rem; font-weight: 400; line-height: 1.15; letter-spacing: 0.01em; color: var(--accent); }
 .nb-body { max-width: var(--measure); }
 .nb-body > * + * { margin-top: 1.1rem; }
 .nb-row > .figure { grid-column: 2; }
@@ -699,7 +708,7 @@ figcaption { margin-top: 0.7rem; max-width: 42rem; color: var(--muted); font-siz
 .figure-medium { max-width: 46rem; }
 .figure-compact { max-width: 30rem; }
 
-.question { max-width: 38rem; font-style: italic; font-size: clamp(1.4rem, 1.1rem + 1.5vw, 2.05rem); line-height: 1.22; letter-spacing: -0.01em; text-wrap: balance; }
+.question { max-width: 40rem; font-family: var(--hand); font-size: clamp(1.85rem, 1.4rem + 1.6vw, 2.6rem); font-weight: 400; line-height: 1.15; letter-spacing: 0.005em; text-wrap: balance; }
 
 .formula { padding: 0.35rem 0 0.35rem 1.2rem; border-left: 2px solid var(--accent); }
 .formula-expression { font-family: var(--math); font-style: italic; font-size: 1.25rem; text-wrap: balance; }
