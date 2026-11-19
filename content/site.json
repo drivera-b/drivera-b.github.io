@@ -1,9 +1,9 @@
 {
   "name": "Daniel Rivera",
-  "tagline": "Math and computing at UC Berkeley",
+  "tagline": "Applied math at UC Berkeley",
   "mark": "λ",
   "greeting": "Hi, I’m Daniel.",
-  "intro": "I study math and computing at UC Berkeley, and I love quant. Most of what I build starts as a hunch I want to test, whether that’s with market data, a deck of cards, or three robots.",
+  "intro": "I’m doing applied math. I’m into quant, AI, and modeling, and I love the stock market. Most of what I build starts as a hunch I want to test: market data, a deck of cards, or three robots.",
   "introMore": [
     "I’m outgoing, and I’m devoted: whatever I take on, I want to do it as well as I can.",
     "Away from the laptop, I love kiwis and my favorite way to train is full body, every other day. I used to run a resale shop I started with $25, and I loved it. Faith is a big part of who I am."
@@ -89,7 +89,7 @@
     {
       "label": "Who I am",
       "paragraphs": [
-        "I’m studying math and computing at UC Berkeley. I love quant, and I’m especially interested in probability and in how models hold up when assumptions about data, costs, or behavior change.",
+        "I’m studying applied math at UC Berkeley. I’m into quant, AI, and modeling. I chose it after going into math and finding I was at least decent at it, and I knew it was what I wanted to do. I love the stock market too.",
         "I’m outgoing, and I’m devoted to doing my best at whatever I take on. I made this site so that someone curious about the same things can see how I went about a project and try something similar."
       ]
     },
