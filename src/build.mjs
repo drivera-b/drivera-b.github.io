@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { access, cp, mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { about, games, home, page, projectPage, work } from "./templates.mjs";
 
@@ -63,7 +64,7 @@ async function loadProjects(directory, extra) {
 async function writePage(route, options) {
   const folder = new URL(route, dist);
   await mkdir(folder, { recursive: true });
-  await writeFile(new URL("index.html", folder), page({ ...options, review }));
+  await writeFile(new URL("index.html", folder), page({ ...options, review, version }));
 }
 
 const site = await loadJson(new URL("content/site.json", base));
@@ -108,6 +109,18 @@ if (site.market) {
 await rm(dist, { recursive: true, force: true });
 await cp(new URL("public/", base), dist, { recursive: true });
 await writeFile(new URL(".nojekyll", dist), "");
+
+// Stylesheet and script links carry a short fingerprint of their contents. When any of
+// them changes the address changes, so browsers fetch the new file instead of a saved copy.
+const fingerprint = createHash("sha256");
+for (const file of ["site.css", "theme.js", "work.js", "market.js", "poker.js"]) {
+  fingerprint.update(await readFile(new URL(`public/assets/${file}`, base)));
+}
+const version = fingerprint.digest("hex").slice(0, 10);
+const marketFile = new URL("assets/market.js", dist);
+const marketSource = await readFile(marketFile, "utf8");
+if (!marketSource.includes('from "./poker.js";')) throw new Error("market.js no longer imports ./poker.js");
+await writeFile(marketFile, marketSource.replace('from "./poker.js";', `from "./poker.js?v=${version}";`));
 
 await writePage("./", {
   site, title: site.name, description: site.intro, root: "./", current: "home",

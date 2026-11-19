@@ -11,7 +11,7 @@ node src/build.mjs
 python3 -m http.server 4173 --bind 127.0.0.1 --directory dist
 ```
 
-Open [the local preview](http://127.0.0.1:4173/). Rerun `node src/build.mjs` after editing source files, then refresh. The build replaces `dist/` on each run. Work entries and navigation are available with JavaScript disabled. JavaScript enables topic filtering, the optional dark theme, and the “Make a market” game, which opens from the invitation on the home page and has its full layout on the Games page.
+Open [the local preview](http://127.0.0.1:4173/). Rerun `node src/build.mjs` after editing source files, then refresh. The build replaces `dist/` on each run. Work entries and navigation are available with JavaScript disabled. Stylesheet and script links carry a fingerprint of their contents, so a refresh always picks up the latest build. JavaScript enables topic filtering, the optional dark theme, and the “Make a market” game, which opens from the invitation on the home page and has its full layout on the Games page.
 
 To preview entries that are still under review, put them in `content/candidates/` and build with `node src/build.mjs --candidates`. That writes a separate `dist-review/` folder with those entries marked Candidate. Serve it the same way on another port. The normal build and the publish workflow leave candidates out.
 

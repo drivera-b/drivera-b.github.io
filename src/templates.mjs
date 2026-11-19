@@ -7,7 +7,8 @@ export function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
-export function page({ site, title, description, root, current, body, script, module, review }) {
+export function page({ site, title, description, root, current, body, script, module, review, version }) {
+  const v = version ? `?v=${version}` : "";
   const nav = [
     { id: "home", label: "Home", path: "" },
     { id: "work", label: "Work", path: "work/" },
@@ -26,9 +27,9 @@ export function page({ site, title, description, root, current, body, script, mo
   <link rel="icon" href="${root}assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="${root}assets/fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="${root}assets/fonts/bodoni-moda-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="${root}assets/site.css">
-  <script src="${root}assets/theme.js" defer></script>
-  ${script ? `<script src="${root}assets/${script}" defer></script>` : ""}${module ? `<script type="module" src="${root}assets/${module}"></script>` : ""}
+  <link rel="stylesheet" href="${root}assets/site.css${v}">
+  <script src="${root}assets/theme.js${v}" defer></script>
+  ${script ? `<script src="${root}assets/${script}${v}" defer></script>` : ""}${module ? `<script type="module" src="${root}assets/${module}${v}"></script>` : ""}
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -132,7 +133,7 @@ function marketInvite(market) {
       <a class="invite-link" href="./games/">${escapeHtml(market.invite.link)}</a>
     </div>
     <div class="invite-panel" id="market-panel" hidden>
-      <div class="plate market-table" id="market-table" data-games="./games/"></div>
+      <div class="plate market-table market-arcade" id="market-table" data-games="./games/" data-title="${escapeHtml(market.title)}"></div>
       <div id="market-steps" hidden>
         ${(market.steps ?? []).map(step => `<div data-step>
           <h3>${escapeHtml(step.title)}</h3>

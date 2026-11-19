@@ -1,6 +1,7 @@
 // The "Make a market" game. It runs in two places:
 // - on the Games page, as the full section with the rules beside it;
-// - on the home page, behind the "Want to play?" invitation, where a short walkthrough comes first.
+// - on the home page, behind the "Want to play?" invitation, as a small arcade-style table
+//   where a short walkthrough comes first.
 // The words are in content/site.json. The poker and trading logic is in poker.js.
 import {
   BENCHMARK_HALF_WIDTH, EXAMPLE, RANK_LABELS, RANK_NAMES, SUIT_NAMES,
@@ -30,8 +31,10 @@ const signed = value => {
   return `${rounded > 0 ? "+" : rounded < 0 ? "\u2212" : ""}${Math.abs(rounded).toFixed(1)}`;
 };
 const points = value => `${fmt(value)} ${round1(value) === 1 ? "point" : "points"}`;
+const toneOf = value => (round1(value) > 0 ? "up" : round1(value) < 0 ? "down" : "flat");
 const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const randomSeed = () => 1 + Math.floor(Math.random() * 99999);
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 function el(tag, attributes = {}, ...children) {
   const node = document.createElement(tag);
@@ -44,6 +47,27 @@ function el(tag, attributes = {}, ...children) {
   return node;
 }
 
+// Counts a number on screen from one value to another. With reduced motion it just shows the result.
+function tween(node, from, to, format, duration = 700, delay = 0) {
+  if (reducedMotion() || from === to) {
+    node.textContent = format(to);
+    return;
+  }
+  node.textContent = format(from);
+  const started = performance.now() + delay;
+  const frame = now => {
+    const t = Math.min(1, Math.max(0, (now - started) / duration));
+    if (!node.isConnected || t === 1) {
+      node.textContent = format(to);
+      return;
+    }
+    node.textContent = format(from + (to - from) * (1 - (1 - t) ** 3));
+    requestAnimationFrame(frame);
+  };
+  requestAnimationFrame(frame);
+}
+
+// A card has a face and a back, so it can be dealt face down and turned over.
 function cardNode(card) {
   const rank = card >> 2;
   const suit = card & 3;
@@ -52,8 +76,9 @@ function cardNode(card) {
     role: "img",
     "aria-label": `${RANK_NAMES[rank]} of ${SUIT_NAMES[suit]}`,
   });
-  node.innerHTML = `<span class="card-rank" aria-hidden="true">${RANK_LABELS[rank]}</span>`
-    + `<svg class="card-suit" viewBox="0 0 16 16" aria-hidden="true">${SUIT_SHAPES[suit]}</svg>`;
+  node.innerHTML = `<span class="card-face" aria-hidden="true"><span class="card-rank">${RANK_LABELS[rank]}</span>`
+    + `<svg class="card-suit" viewBox="0 0 16 16" width="15" height="15">${SUIT_SHAPES[suit]}</svg></span>`
+    + `<span class="card-back" aria-hidden="true"></span>`;
   return node;
 }
 
@@ -62,7 +87,7 @@ let dealt = 0; // position in the current deal, so the cards land one after anot
 function cardGroup(label, cards, empty = 0) {
   const row = el("span", { class: "cards" }, ...cards.map(card => {
     const node = cardNode(card);
-    node.style.animationDelay = `${dealt * 70}ms`;
+    node.style.animationDelay = `${dealt * 110}ms`;
     dealt += 1;
     return node;
   }));
@@ -85,6 +110,14 @@ function describe(outcome, fair) {
   return `You ${outcome.side} at ${fmt(outcome.price)}. Fair value is ${fmt(fair)}, so you ${earned}.`;
 }
 
+// The same result as a rubber stamp. Decoration only: the sentence beside it is what gets read out.
+function stamp(outcome, delay = 0) {
+  const text = outcome.side === "none" ? "No trade" : `${outcome.side === "sold" ? "Sold" : "Bought"} at ${fmt(outcome.price)}`;
+  return el("p", { class: `mt-stamp mt-tone-${toneOf(outcome.pnl)}`, "aria-hidden": "true", style: `animation-delay:${delay}ms` },
+    el("span", {}, text),
+    outcome.side !== "none" && el("span", {}, signed(outcome.pnl)));
+}
+
 // One announcement area that stays in the page, so screen readers hear each step and result.
 const live = el("p", { class: "visually-hidden", role: "status" });
 const stage = el("div", { class: "mt-stage" });
@@ -104,25 +137,32 @@ function topLine(...parts) {
 /* The walkthrough shown on the home page before the first hand. */
 
 function shareBar(fair) {
+  const a = el("b", {}, fmt(fair));
+  const b = el("b", {}, fmt(100 - fair));
+  tween(a, 0, fair, fmt, 800, 1000);
+  tween(b, 100, 100 - fair, fmt, 800, 1000);
   return el("div", { class: "mt-share", role: "img", "aria-label": `Hand A is worth ${fmt(fair)} out of 100 and hand B ${fmt(100 - fair)}.` },
-    el("div", { class: "mt-share-labels" }, el("span", {}, `Hand A ${fmt(fair)}`), el("span", {}, `Hand B ${fmt(100 - fair)}`)),
+    el("div", { class: "mt-share-labels" }, el("span", {}, "Hand A ", a), el("span", {}, "Hand B ", b)),
     el("div", { class: "mt-share-bar" }, el("span", { style: `width:${fair}%` })));
 }
 
 // A stretch of the price scale, from 30 to 70, with the example quote on it.
+// In the second step the bid and ask open out from fair value. In the third the trader walks in and hits a price.
 function priceLine(withTrader) {
   const { bid, ask, fair, belief } = EXAMPLE;
-  const at = value => `${((value - 30) / 40) * 100}%`;
-  const mark = (value, label, kind) => el("span", { class: `ml-mark ${kind}`, style: `left:${at(value)}` }, el("span", {}, label));
+  const at = value => ((value - 30) / 40) * 100;
+  const side = settle(EXAMPLE).side;
+  const inBand = ((fair - bid) / (ask - bid)) * 100;
+  const mark = (value, label, kind) => el("span", { class: `ml-mark ${kind}`, style: `left:${at(value)}%;--from:${at(fair)}%` }, el("span", {}, label));
   return el("div", {
-    class: `mt-line${withTrader ? " mt-line-still" : ""}`,
+    class: `mt-line ${withTrader ? "mt-line-trade" : "mt-line-quote"}`,
     role: "img",
     "aria-label": `A price scale. Bid ${bid}, ask ${ask}, fair value ${fmt(fair)}${withTrader ? `, and a trader who thinks ${belief}` : ""}.`,
   },
     el("span", { class: "ml-track" }),
-    el("span", { class: "ml-band", style: `left:${at(bid)};width:${((ask - bid) / 40) * 100}%` }),
-    mark(bid, `bid ${bid}`, "ml-quote ml-above"),
-    mark(ask, `ask ${ask}`, "ml-quote ml-above"),
+    el("span", { class: "ml-band", style: `left:${at(bid)}%;width:${at(ask) - at(bid)}%;--l:${inBand}%;--r:${100 - inBand}%` }),
+    mark(bid, `bid ${bid}`, `ml-quote ml-above${withTrader && side === "bought" ? " ml-hit" : ""}`),
+    mark(ask, `ask ${ask}`, `ml-quote ml-above${withTrader && side === "sold" ? " ml-hit" : ""}`),
     mark(fair, `fair ${fmt(fair)}`, "ml-fair ml-below"),
     withTrader && mark(belief, `trader ${belief}`, "ml-trader ml-below"));
 }
@@ -133,7 +173,12 @@ function introVisual(index) {
     return [handsRow(EXAMPLE.a, EXAMPLE.b), shareBar(EXAMPLE.fair)];
   }
   if (index === 1) return [priceLine(false)];
-  return [priceLine(true), el("p", { class: "mt-headline mt-late" }, describe(settle(EXAMPLE), EXAMPLE.fair))];
+  const outcome = settle(EXAMPLE);
+  return [
+    priceLine(true),
+    stamp(outcome, 1150),
+    el("p", { class: "mt-headline mt-late", style: "animation-delay:1500ms" }, describe(outcome, EXAMPLE.fair)),
+  ];
 }
 
 let introStep = 0;
@@ -195,6 +240,18 @@ function total() {
   return game.results.reduce((sum, result) => sum + result.pnl, 0);
 }
 
+// Hand counter, one light per hand, and the running score.
+function scoreLine() {
+  const lights = BOARD_SIZES.map((_, i) => {
+    const result = game.results[i];
+    return el("span", { class: `mt-pip mt-pip-${result ? toneOf(result.pnl) : i === game.index ? "now" : "todo"}` });
+  });
+  return el("p", { class: "mt-top" },
+    el("span", {}, `Hand ${game.index + 1} of ${BOARD_SIZES.length}`),
+    el("span", { class: "mt-pips", "aria-hidden": "true" }, ...lights),
+    el("span", { class: `mt-pnl-wrap mt-tone-${toneOf(total())}` }, "P&L ", el("span", { class: "mt-pnl" }, signed(total()))));
+}
+
 function showHand(focus) {
   const index = game.index;
   const deal = dealHand(makeRng(game.seed * 1000 + index * 10 + 1), BOARD_SIZES[index]);
@@ -223,7 +280,7 @@ function showHand(focus) {
     : "Board: no cards yet, five to come";
 
   stage.replaceChildren(
-    topLine(`Hand ${index + 1} of ${BOARD_SIZES.length}`, `P&L ${signed(total())}`),
+    scoreLine(),
     handsRow(deal.a, deal.b),
     el("div", { class: "mt-board", role: "group", "aria-label": boardLabel },
       cardGroup(`Board, ${STREETS[deal.board.length]}`, deal.board, 5 - deal.board.length)),
@@ -261,6 +318,14 @@ function showHand(focus) {
     quote.hidden = true;
     hint.hidden = true;
     prompt.textContent = "Your market for hand A";
+    // A beat while the trader decides.
+    if (!reducedMotion()) {
+      result.replaceChildren(el("p", { class: "mt-thinking" }, "The trader looks at your market",
+        el("span", { class: "mt-dots", "aria-hidden": "true" }, el("i"), el("i"), el("i"))));
+      result.hidden = false;
+      await sleep(750);
+      if (game.hand !== hand) return;
+    }
     reveal(hand, values, fair, result);
   });
 
@@ -277,6 +342,7 @@ function reveal(hand, quote, fair, result) {
   const outcome = settle({ ...quote, fair, belief });
   const pnl = round1(outcome.pnl);
   const run = simulate(deal.a, deal.b, deal.board, makeRng(game.seed * 1000 + index * 10 + 3), DEALS);
+  const before = total();
   game.results.push({ ...quote, fair, belief, sharp: trader.sharp, side: outcome.side, price: outcome.price, pnl });
 
   const headline = describe(outcome, fair);
@@ -296,6 +362,7 @@ function reveal(hand, quote, fair, result) {
   });
 
   result.replaceChildren(
+    stamp(outcome),
     el("p", { class: "mt-headline" }, headline),
     el("p", { class: "mt-trader" }, about),
     el("figure", { class: "mt-plot" }, svg,
@@ -303,7 +370,17 @@ function reveal(hand, quote, fair, result) {
     next,
   );
   result.hidden = false;
-  stage.querySelector(".mt-top span:last-child").textContent = `P&L ${signed(total())}`;
+
+  // Score line: this hand's light turns on, the change floats up, and the total counts to its new value.
+  const score = stage.querySelector(".mt-pnl-wrap");
+  score.className = `mt-pnl-wrap mt-tone-${toneOf(total())}`;
+  tween(score.querySelector(".mt-pnl"), before, total(), signed, 600, 250);
+  stage.querySelectorAll(".mt-pip")[index].className = `mt-pip mt-pip-${toneOf(pnl)}`;
+  if (pnl !== 0 && !reducedMotion()) {
+    const change = el("span", { class: `mt-float mt-tone-${toneOf(pnl)}`, "aria-hidden": "true" }, signed(pnl));
+    change.addEventListener("animationend", () => change.remove());
+    score.append(change);
+  }
   live.textContent = `${headline} ${about}`;
   next.focus({ preventScroll: true });
 
@@ -317,10 +394,10 @@ function animate(target) {
     drawPlot(target);
     return;
   }
-  const started = performance.now();
+  const started = performance.now() + 250;
   const frame = now => {
     if (plot !== target) return;
-    target.progress = Math.min(1, (now - started) / 900);
+    target.progress = Math.min(1, Math.max(0, (now - started) / 1100));
     drawPlot(target);
     if (target.progress < 1) requestAnimationFrame(frame);
   };
@@ -334,7 +411,7 @@ function drawPlot({ svg, model, progress }) {
   const height = Math.max(140, Math.round(box.height));
   svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
   const left = 30;
-  const right = 68;
+  const right = 72;
   const top = 8;
   const bottom = 22;
   const plotWidth = width - left - right;
@@ -393,8 +470,26 @@ function drawPlot({ svg, model, progress }) {
   const line = shown.map(([n, value]) => `${px(x(n))},${px(y(value))}`).join(" ");
   parts.push(`<polyline class="mp-run" clip-path="url(#mt-clip)" points="${line}"/>`);
   const [endN, endValue] = shown.at(-1);
-  if (inView(endValue)) parts.push(`<circle class="mp-dot" cx="${px(x(endN))}" cy="${px(y(endValue))}" r="2.5"/>`);
+  if (inView(endValue)) parts.push(`<circle class="mp-dot" cx="${px(x(endN))}" cy="${px(y(endValue))}" r="3"/>`);
   svg.innerHTML = parts.join("");
+}
+
+// A short shower of card suits for a winning game.
+function celebrate() {
+  if (reducedMotion()) return;
+  const layer = el("div", { class: "mt-burst", "aria-hidden": "true" });
+  for (let i = 0; i < 22; i += 1) {
+    const suit = i % 4;
+    const piece = el("span", {
+      class: `mt-piece${suit === 1 || suit === 2 ? " mt-piece-red" : ""}`,
+      style: `left:${(3 + Math.random() * 92).toFixed(1)}%;--spin:${Math.round(Math.random() * 720 - 360)}deg;--drift:${(Math.random() * 6 - 3).toFixed(1)}rem;`
+        + `animation-delay:${Math.round(Math.random() * 600)}ms;animation-duration:${1500 + Math.round(Math.random() * 900)}ms`,
+    });
+    piece.innerHTML = `<svg viewBox="0 0 16 16" width="16" height="16">${SUIT_SHAPES[suit]}</svg>`;
+    layer.append(piece);
+  }
+  table.append(layer);
+  setTimeout(() => layer.remove(), 3400);
 }
 
 function showSummary() {
@@ -418,17 +513,17 @@ function showSummary() {
 
   stage.replaceChildren(
     topLine(`Game ${game.seed}`, `${results.length} hands`),
-    el("p", { class: "mt-total" }, verdict),
+    el("p", { class: `mt-total mt-tone-${toneOf(sum)}` }, verdict),
     el("table", { class: "mt-scores", "aria-label": "Results by hand" },
       el("thead", {}, el("tr", {},
         cell("th", "#", { scope: "col", "aria-label": "Hand" }),
         ...["Market", "Fair", "Trade", "P&L"].map(name => cell("th", name, { scope: "col" })))),
-      el("tbody", {}, ...results.map((r, i) => el("tr", {},
+      el("tbody", {}, ...results.map((r, i) => el("tr", { style: `animation-delay:${200 + i * 90}ms` },
         cell("th", String(i + 1), { scope: "row" }),
         cell("td", `${fmt(r.bid)}\u2013${fmt(r.ask)}`),
         cell("td", fmt(r.fair)),
         cell("td", `${trade(r)}${r.sharp ? "*" : ""}`),
-        cell("td", signed(r.pnl)))))),
+        cell("td", signed(r.pnl), { class: `mt-tone-${toneOf(r.pnl)}` }))))),
     el("p", { class: "mt-note" }, `* a sharp trader. The middle of your market missed fair value by ${points(miss)} on average. `
       + `Someone who knew every fair value and quoted ${BENCHMARK_HALF_WIDTH} points either side would have made ${signed(reference)} against the same traders.`),
     el("p", { class: "mt-actions" }, again,
@@ -437,12 +532,17 @@ function showSummary() {
   );
   live.textContent = verdict;
   again.focus({ preventScroll: true });
+  if (sum > 0) celebrate();
 }
 
 /* Start-up. */
 
 if (table) {
-  table.replaceChildren(live, stage);
+  // The home page table has a title bar, like a game window.
+  const titleBar = invite && el("p", { class: "mt-title", "aria-hidden": "true" },
+    el("span", {}, table.dataset.title ?? ""),
+    el("span", { class: "mt-title-lights" }, el("i"), el("i"), el("i")));
+  table.replaceChildren(...[live, titleBar, stage].filter(Boolean));
   // Fair value for the first hand is only worked out if someone starts to play.
   for (const type of ["focusin", "pointerdown"]) {
     table.addEventListener(type, () => { if (game?.hand) price(game.hand); });
