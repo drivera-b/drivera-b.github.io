@@ -1,0 +1,29 @@
+{
+  "title": "Orbit Loom",
+  "year": 2026,
+  "featuredOrder": 0,
+  "topics": ["Software", "Graphics"],
+  "summary": "A browser animation project from Berkeley CS 61A, with drawings that respond to live shape and speed controls.",
+  "question": "How much can one control change the feel of a drawing?",
+  "demo": { "path": "orbit-loom/", "label": "Open interactive demo" },
+  "links": [
+    { "label": "GitHub demo source", "url": "https://github.com/drivera-b/orbit-loom" }
+  ],
+  "figure": {
+    "file": "orbit-loom-twin-comets.jpg",
+    "width": 512,
+    "height": 372,
+    "alt": "Blue and gold concentric orbits linked by curved pink and purple ribbons on Animator’s canvas.",
+    "caption": "Twin Comets, an original drawing rendered in my CS 61A Animator project."
+  },
+  "sections": [
+    {
+      "title": "The drawing editor",
+      "text": "I used a browser-based drawing editor to explore how curves feel when they move. The canvas renders the drawing beside its controls, so I could adjust the shape, change the speed, pause, or replay and see the effect immediately."
+    },
+    {
+      "title": "Twin Comets",
+      "text": "Two sets of arcs are joined by ribbons. Moving the shape slider changes the distance between the centers and stretches the ribbons. The public demo redraws that piece directly in SVG."
+    }
+  ]
+}

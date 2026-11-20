@@ -4,6 +4,7 @@
   "mark": "λ",
   "greeting": "Hi, I’m Daniel.",
   "intro": "I’m doing applied math. I’m into quant, AI, and modeling, and I love the stock market. Most of what I build starts as a hunch I want to test: market data, a deck of cards, or three robots.",
+  "homeIntro": "I’m interested in markets and machine learning. Most of what I build starts with a hunch I want to test, whether it takes market data, a deck of cards, or three robots.",
   "introMore": [
     "I’m outgoing, and I’m devoted: whatever I take on, I want to do it as well as I can.",
     "Away from the laptop, I love kiwis and my favorite way to train is full body, every other day. I used to run a resale shop I started with $25, and I loved it. Faith is a big part of who I am."
@@ -71,7 +72,7 @@
     ]
   },
   "games": {
-    "intro": "Short games built on the ideas in my projects. There’s one so far."
+    "intro": "Small games I built around probability and markets."
   },
   "now": {
     "label": "Currently exploring",

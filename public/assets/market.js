@@ -1,7 +1,4 @@
-// The "Make a market" game. It runs in two places:
-// - on the Games page, as the full section with the rules beside it;
-// - on the home page, behind the "Want to play?" invitation, as a small arcade-style table
-//   where a short walkthrough comes first.
+// The "Make a market" game and its optional walkthrough on the Games page.
 // The words are in content/site.json. The poker and trading logic is in poker.js.
 import {
   BENCHMARK_HALF_WIDTH, EXAMPLE, RANK_LABELS, RANK_NAMES, SUIT_NAMES,
@@ -9,9 +6,6 @@ import {
 } from "./poker.js";
 
 const table = document.querySelector("#market-table");
-const section = document.querySelector("#market"); // Games page
-const invite = document.querySelector("#market-invite"); // home page
-const gamesHref = table?.dataset.games ?? ""; // set on the home page only
 
 // Community cards showing in each hand of a game: two before the flop, two on the flop, one on the turn.
 const BOARD_SIZES = [0, 0, 3, 3, 4];
@@ -134,7 +128,7 @@ function topLine(...parts) {
   return el("p", { class: "mt-top" }, ...parts.map(part => el("span", {}, part)));
 }
 
-/* The walkthrough shown on the home page before the first hand. */
+/* The optional walkthrough. */
 
 function shareBar(fair) {
   const a = el("b", {}, fmt(fair));
@@ -181,12 +175,9 @@ function introVisual(index) {
   ];
 }
 
-let introStep = 0;
-
 function showIntro(index, focus) {
   const steps = [...document.querySelectorAll("#market-steps > [data-step]")];
   if (!steps.length) return startGame(focus);
-  introStep = index;
   const last = index === steps.length - 1;
   const title = steps[index].querySelector("h3").textContent;
   const [first, ...rest] = [...steps[index].querySelectorAll("p")].map(paragraph => paragraph.textContent);
@@ -314,7 +305,7 @@ function showHand(focus) {
     quote.disabled = true;
     quote.textContent = "Pricing\u2026";
     const fair = await price(hand);
-    if (game.hand !== hand) return;
+    if (game?.hand !== hand) return;
     quote.hidden = true;
     hint.hidden = true;
     prompt.textContent = "Your market for hand A";
@@ -324,7 +315,7 @@ function showHand(focus) {
         el("span", { class: "mt-dots", "aria-hidden": "true" }, el("i"), el("i"), el("i"))));
       result.hidden = false;
       await sleep(750);
-      if (game.hand !== hand) return;
+      if (game?.hand !== hand) return;
     }
     reveal(hand, values, fair, result);
   });
@@ -527,8 +518,7 @@ function showSummary() {
     el("p", { class: "mt-note" }, `* a sharp trader. The middle of your market missed fair value by ${points(miss)} on average. `
       + `Someone who knew every fair value and quoted ${BENCHMARK_HALF_WIDTH} points either side would have made ${signed(reference)} against the same traders.`),
     el("p", { class: "mt-actions" }, again,
-      el("a", { href: `${gamesHref}?game=${game.seed}#market` }, "Link to this game"),
-      gamesHref && el("a", { href: gamesHref }, "Games page")),
+      el("a", { href: `?game=${game.seed}#market` }, "Link to this game")),
   );
   live.textContent = verdict;
   again.focus({ preventScroll: true });
@@ -538,38 +528,23 @@ function showSummary() {
 /* Start-up. */
 
 if (table) {
-  // The home page table has a title bar, like a game window.
-  const titleBar = invite && el("p", { class: "mt-title", "aria-hidden": "true" },
-    el("span", {}, table.dataset.title ?? ""),
-    el("span", { class: "mt-title-lights" }, el("i"), el("i"), el("i")));
-  table.replaceChildren(...[live, titleBar, stage].filter(Boolean));
+  table.replaceChildren(live, stage);
   // Fair value for the first hand is only worked out if someone starts to play.
   for (const type of ["focusin", "pointerdown"]) {
     table.addEventListener(type, () => { if (game?.hand) price(game.hand); });
   }
   new ResizeObserver(() => { if (plot?.svg.isConnected) drawPlot(plot); }).observe(table);
 
-  if (invite) {
-    // Home page: nothing is dealt until someone says yes.
-    const toggle = invite.querySelector("#market-open");
-    const panel = invite.querySelector("#market-panel");
-    const closedLabel = toggle.textContent;
-    toggle.hidden = false;
-    toggle.addEventListener("click", () => {
-      const opening = panel.hidden;
-      panel.hidden = !opening;
-      toggle.setAttribute("aria-expanded", String(opening));
-      toggle.textContent = opening ? "Close" : closedLabel;
-      if (!opening) return;
-      // Focus moves to the Next button, so the walkthrough can be stepped through with Enter.
-      if (!game) showIntro(introStep, true);
-      if (panel.getBoundingClientRect().bottom > window.innerHeight) {
-        invite.scrollIntoView({ block: "start", behavior: reducedMotion() ? "auto" : "smooth" });
-      }
+  const tutorial = document.querySelector("#market-tutorial");
+  if (tutorial) {
+    tutorial.hidden = false;
+    tutorial.addEventListener("click", () => {
+      game = null;
+      plot = null;
+      showIntro(0, true);
+      table.scrollIntoView({ block: "nearest", behavior: reducedMotion() ? "auto" : "smooth" });
     });
-  } else {
-    startGame(false);
-    table.hidden = false;
-    section?.classList.add("market-live");
   }
+  startGame(false);
+  table.hidden = false;
 }

@@ -1,7 +1,7 @@
 const filter = document.querySelector(".work-filter");
 const chips = [...document.querySelectorAll(".work-filter .chip")];
 const count = document.querySelector("#work-count");
-const rows = document.querySelectorAll("#work-projects > .index-row");
+const rows = document.querySelectorAll("#work-projects > li");
 
 function showTopic(topic) {
   let visible = 0;

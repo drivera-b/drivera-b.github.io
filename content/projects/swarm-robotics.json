@@ -8,6 +8,7 @@
   ],
   "summary": "A three-robot experiment on how a crowding penalty affects where agents go and how much reward they collect.",
   "question": "Can a simple crowding penalty spread robots out without giving up too much reward?",
+  "previewImage": "swarm-arena.jpg",
   "symbol": {
     "glyph": "λ",
     "name": "lambda",

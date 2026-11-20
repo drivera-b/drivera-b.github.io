@@ -8,6 +8,7 @@
   ],
   "summary": "An educational health-modeling prototype that uses Monte Carlo simulation to show how uncertainty propagates through a forecast.",
   "question": "How do you show someone what a health model knows and where its assumptions take over?",
+  "previewImage": "slce-simulation-charts.png",
   "symbol": {
     "glyph": "π",
     "name": "pi",

@@ -7,6 +7,17 @@
   ],
   "summary": "My MITES Semester project uses repeated deals to estimate Texas Hold’em equity from known cards.",
   "question": "How much of the pot is a hand worth when some of the cards are still unknown?",
+  "relatedGame": true,
+  "links": [
+    { "label": "GitHub source", "url": "https://github.com/drivera-b/poker-equity-simulator" }
+  ],
+  "figure": {
+    "file": "poker-equity-benchmark.png",
+    "width": 960,
+    "height": 560,
+    "alt": "Estimated preflop equity is 85% for pocket aces, 67% for ace-king suited, and 34% for seven-two offsuit against one random opponent.",
+    "caption": "An example run of my Python simulator. Each hand was tested over 8,000 seeded deals against one random opponent, with split pots counted toward equity."
+  },
   "symbol": {
     "glyph": "Ω",
     "name": "omega",

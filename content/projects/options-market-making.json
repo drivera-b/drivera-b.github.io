@@ -7,6 +7,17 @@
   ],
   "summary": "An educational Python simulator for exploring options pricing, discrete hedging, and inventory risk.",
   "question": "What changes when an options hedge can only be adjusted at discrete times and every adjustment has a cost?",
+  "relatedGame": true,
+  "links": [
+    { "label": "GitHub source", "url": "https://github.com/drivera-b/options-market-making-lab" }
+  ],
+  "figure": {
+    "file": "options-hedge-costs.png",
+    "width": 960,
+    "height": 560,
+    "alt": "Simulated fees of $0.016 for 12 hedge adjustments, $0.034 for 52, and $0.065 for 252.",
+    "caption": "Fees from the lab’s seeded six-month call example. The bars show costs for the simulated schedules."
+  },
   "symbol": {
     "glyph": "Δ",
     "name": "delta",

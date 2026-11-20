@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Twin Comets, an interactive drawing from Orbit Loom by Daniel Rivera.">
+  <title>Orbit Loom | Daniel Rivera</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="./drawing.js" defer></script>
+</head>
+<body>
+  <header class="bar">
+    <a href="https://drivera-b.github.io/work/orbit-loom/">← Project notes</a>
+    <a href="https://github.com/drivera-b/orbit-loom">GitHub source ↗</a>
+  </header>
+  <main>
+    <h1>Orbit Loom</h1>
+    <p>Twin Comets by Daniel Rivera</p>
+    <figure>
+      <svg id="drawing" viewBox="-440 -260 880 520" role="img" aria-label="Two groups of concentric arcs joined by seven curved threads. The shape control moves the centers apart."></svg>
+    </figure>
+    <div class="controls" hidden>
+      <label>Shape <input type="range" id="shape" min="0" max="100" value="50"></label>
+      <label>Speed <select id="speed">
+        <option value="0.5">0.5×</option>
+        <option value="1" selected>1×</option>
+        <option value="2">2×</option>
+      </select></label>
+      <button id="play" type="button">Pause</button>
+      <button id="replay" type="button">Replay</button>
+    </div>
+    <noscript><p>Enable JavaScript to explore the drawing.</p></noscript>
+  </main>
+</body>
+</html>

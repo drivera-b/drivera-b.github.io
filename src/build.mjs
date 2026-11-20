@@ -39,6 +39,12 @@ async function loadProject(directory, filename, extra = {}) {
     throw new Error(`Missing project content in ${filename}`);
   }
   if (project.figure) await checkFigure(project.figure, filename);
+  if (project.demo) {
+    if (!project.demo.label || !/^[a-z0-9]+(?:-[a-z0-9]+)*\/$/.test(project.demo.path)) {
+      throw new Error(`Invalid demo path in ${filename}`);
+    }
+    await access(new URL(`public/${project.demo.path}index.html`, base));
+  }
   if (project.symbol && !(project.symbol.glyph && project.symbol.name && project.symbol.meaning)) {
     throw new Error(`Symbol in ${filename} needs a glyph, a name, and a meaning`);
   }
@@ -46,6 +52,10 @@ async function loadProject(directory, filename, extra = {}) {
     if (!section.title || !section.text) throw new Error(`Incomplete section in ${filename}`);
     if (section.figure) await checkFigure(section.figure, filename);
     if (section.formula && !section.formula.expression) throw new Error(`Empty formula in ${filename}`);
+  }
+  if (project.previewImage && ![project.figure, ...project.sections.map(section => section.figure)]
+    .some(figure => figure?.file === project.previewImage)) {
+    throw new Error(`Preview image in ${filename} must reference one of its figures`);
   }
   return { ...project, ...extra, slug };
 }
@@ -80,7 +90,6 @@ if (review) {
 }
 projects.sort((a, b) => (a.featuredOrder ?? Number.MAX_SAFE_INTEGER) - (b.featuredOrder ?? Number.MAX_SAFE_INTEGER)
   || b.year - a.year || a.title.localeCompare(b.title));
-const featured = projects.filter(project => project.featuredOrder);
 
 if (site.hero) {
   await checkFigure(site.hero.image, "content/site.json", { captionOptional: true });
@@ -113,7 +122,7 @@ await writeFile(new URL(".nojekyll", dist), "");
 // Stylesheet and script links carry a short fingerprint of their contents. When any of
 // them changes the address changes, so browsers fetch the new file instead of a saved copy.
 const fingerprint = createHash("sha256");
-for (const file of ["site.css", "theme.js", "work.js", "market.js", "poker.js"]) {
+for (const file of ["site.css", "theme.js", "home.js", "work.js", "market.js", "poker.js"]) {
   fingerprint.update(await readFile(new URL(`public/assets/${file}`, base)));
 }
 const version = fingerprint.digest("hex").slice(0, 10);
@@ -123,8 +132,8 @@ if (!marketSource.includes('from "./poker.js";')) throw new Error("market.js no 
 await writeFile(marketFile, marketSource.replace('from "./poker.js";', `from "./poker.js?v=${version}";`));
 
 await writePage("./", {
-  site, title: site.name, description: site.intro, root: "./", current: "home",
-  body: home(site, featured), module: site.market ? "market.js" : undefined,
+  site, title: site.name, description: site.homeIntro ?? site.intro, root: "./", current: "home", script: "home.js",
+  body: home(site, review ? projects.filter(project => !project.candidate) : projects),
 });
 await writePage("work/", {
   site, title: `Work | ${site.name}`, description: site.workIntro, root: "../", current: "work",
@@ -143,7 +152,7 @@ await writePage("about/", {
 for (const [index, project] of projects.entries()) {
   await writePage(`work/${project.slug}/`, {
     site, title: `${project.title} | ${site.name}`, description: project.summary, root: "../../",
-    body: projectPage(project, projects[(index + 1) % projects.length]),
+    body: projectPage(project, projects[(index + 1) % projects.length], Boolean(site.market)),
   });
 }
 
