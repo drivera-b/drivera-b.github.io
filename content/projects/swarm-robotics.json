@@ -43,7 +43,7 @@
     },
     {
       "title": "What the pilot showed",
-      "text": "The middle penalty was associated with a more even spread across zones and lower co-location, with a drop in average score per decision. At the highest penalty, the score declined further and the spread improved little. That made the middle setting the best observed compromise in this pilot. The project placed 2nd in Robotics at the expo.",
+      "text": "Moving from the low to the middle penalty roughly halved the rate at which robot pairs chose the same zone, while score per decision fell by about 10%. The highest penalty lowered the score further and barely changed how often robots chose the same zone. The project placed 2nd in Robotics at the expo.",
       "figure": {
         "file": "swarm-pareto.png",
         "width": 1417,

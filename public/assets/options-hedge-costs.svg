@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560">
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #eff7ff; }
+    .title { font-family: Georgia, serif; font-size: 49px; letter-spacing: -1.4px; }
+    .subtitle { fill: #b1c9dc; font-size: 24px; }
+    .label { font-size: 27px; }
+    .value { font-size: 28px; font-weight: 650; }
+    .tick, .note { fill: #b1c9dc; font-size: 21px; }
+    .grid { stroke: #3b5268; stroke-width: 1.25; }
+    .zero { stroke: #8ba9bf; stroke-width: 1.5; }
+    .bar { fill: #638eae; }
+    .bar-focus { fill: #95d8ed; }
+  </style>
+  <rect width="960" height="100%" fill="#172b40"/>
+  <path d="M48 139H912" class="grid"/>
+  <text x="48" y="71" class="title" text-anchor="start">The cost of rebalancing</text>
+  <text x="50" y="111" class="subtitle" text-anchor="start">Transaction fees in a simulated six-month call hedge</text>
+  <text x="141" y="439" class="tick" text-anchor="end">$0.00</text>
+  <path d="M166 432L910 432" class="zero"/>
+  <text x="141" y="378" class="tick" text-anchor="end">$0.02</text>
+  <path d="M166 371L910 371" class="grid"/>
+  <text x="141" y="317" class="tick" text-anchor="end">$0.04</text>
+  <path d="M166 310L910 310" class="grid"/>
+  <text x="141" y="256" class="tick" text-anchor="end">$0.06</text>
+  <path d="M166 249L910 249" class="grid"/>
+  <text x="141" y="195" class="tick" text-anchor="end">$0.08</text>
+  <path d="M166 188L910 188" class="grid"/>
+  <rect x="244" y="383.668" width="130" height="48.3322" rx="3" class="bar"/>
+  <text x="309" y="366.668" class="value" text-anchor="middle">$0.016</text>
+  <text x="309" y="476" class="label" text-anchor="middle">12 hedge trades</text>
+  <rect x="474" y="327.585" width="130" height="104.415" rx="3" class="bar"/>
+  <text x="539" y="310.585" class="value" text-anchor="middle">$0.034</text>
+  <text x="539" y="476" class="label" text-anchor="middle">52 hedge trades</text>
+  <rect x="704" y="235.09" width="130" height="196.91" rx="3" class="bar-focus"/>
+  <text x="769" y="218.09" class="value" text-anchor="middle">$0.065</text>
+  <text x="769" y="476" class="label" text-anchor="middle">252 hedge trades</text>
+  <text x="48" y="530" class="note" text-anchor="start">Seed 7 · Fee of 1 basis point of stock value traded</text>
+</svg>

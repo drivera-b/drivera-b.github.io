@@ -7,54 +7,50 @@
     "Quant",
     "Software"
   ],
-  "summary": "A Python research workflow for testing how intraday futures ideas hold up under costs, fill uncertainty, and account rules.",
-  "question": "How sensitive is a promising backtest to the fills and costs it assumes?",
+  "summary": "I built a Python workbench to see whether intraday futures strategies hold up under worse execution, extra fees, and different account rules.",
+  "question": "What happens to a promising backtest when trades get worse prices or cost more to place?",
   "symbol": {
     "glyph": "α",
     "name": "alpha",
     "meaning": "the edge a strategy claims before costs and fills test it."
   },
   "figure": {
-    "file": "workbench-execution-stress.svg",
-    "width": 920,
-    "height": 330,
-    "alt": "Bar chart comparing simulated lifecycle expectancy under baseline costs, added costs, and worse fills.",
-    "caption": "Execution stress in a simulated account lifecycle. The chart comes from the public workbench."
+    "file": "workbench-fill-sensitivity.svg",
+    "width": 960,
+    "height": 560,
+    "alt": "Expected net value per simulated account lifecycle was $2,509.22 at baseline, $2,324.31 with an extra $1 per trade, $2,120.10 with an extra $2 per trade, and $888.29 under the 5% fill stress scenario.",
+    "caption": "The 5% fill stress scenario models worse execution and cuts expected net value from $2,509 to $888 over the simulated life of an account. Adding $2 in fees per trade brings it to $2,120."
   },
   "sections": [
     {
       "title": "Where it started",
-      "text": "I started studying NQ and ES futures on my own in 2021. The workbench is what that turned into: a way to test an idea against a benchmark I freeze before I look at recent results."
+      "text": "I started studying NQ and ES futures on my own in 2021. The workbench grew out of wanting to know how much I could trust the results I was seeing in a backtest."
     },
     {
       "title": "What I built",
-      "text": "I assembled a research workflow around a fixed historical benchmark, later evaluation windows, and checks that isolate the effect of changing a policy or assumption. The public workbench includes trade summaries, bootstrap intervals, lifecycle simulations, and reports that can be rebuilt from the included artifacts.",
+      "text": "I locked in a benchmark of 1,123 historical out-of-sample trades before comparing it with more recent windows. I resampled trades within each window to estimate how uncertain its average profit or loss per trade was. The public Python package can recreate the reports from the included anonymized trade data and reference results.",
       "figure": {
-        "file": "workbench-window-checks.svg",
-        "width": 920,
-        "height": 330,
-        "alt": "Bar chart of expectancy per trade for recent windows of 20, 30, 45, 60, and 90 sessions. The 45 and 90 session windows are labeled on track. The other three are labeled inconclusive.",
-        "caption": "Expectancy per trade in recent windows of 20 to 90 sessions, each checked against the frozen benchmark. Three of the five windows were inconclusive."
+        "file": "workbench-window-intervals.svg",
+        "width": 960,
+        "height": 608,
+        "alt": "All five evaluation windows have positive estimates of dollars per trade. The bootstrap intervals for the 20-, 30-, and 60-session windows cross zero. The intervals for the 45- and 90-session windows stay above zero.",
+        "caption": "Dots show average P&L per trade. Lines show bootstrap intervals. Three of the five intervals cross zero, even though all five averages are positive."
       }
     },
     {
-      "title": "What the analysis showed",
-      "text": "In the published stress scenarios, a small added cost had less impact than degrading fills across the simulated trade stream. That made execution quality a priority for subsequent evaluation. The result depends on the historical trade sample and how the fill degradation was modeled.",
+      "title": "Same trades, different account rules",
+      "text": "I used Monte Carlo simulations to see how the same trade history would fare under five sets of account rules. Drawdown limits, fees, and payout terms changed the net result, even with the underlying trades held fixed.",
       "figure": {
-        "file": "workbench-firm-comparison.svg",
-        "width": 980,
-        "height": 360,
-        "alt": "Horizontal bar chart of simulated lifecycle value for the same trade stream under five account rule sets. Four are positive and one is slightly negative.",
-        "caption": "The same simulated trade stream under five account rule sets from the public workbench. Simulated lifecycle value ranged from about $3,741 to a loss of about $166."
+        "file": "workbench-account-comparison.svg",
+        "width": 960,
+        "height": 608,
+        "alt": "Expected net value for the same trades ranged from a loss of $165.65 under MyFundedFutures Flex 50K to a gain of $3,740.59 under MyFundedFutures Rapid 50K. The other three account programs were positive.",
+        "caption": "Average simulated outcomes ranged from a loss of about $166 to a gain of about $3,741 per account."
       }
     },
     {
-      "title": "What I threw out",
-      "text": "Some branches looked good in a first backtest and then failed a replay on finer data or the execution stress test. I dropped them. The public ablation table shows which ones. The project has 52 automated tests."
-    },
-    {
-      "title": "What the evidence covers",
-      "text": "The public release documents historical analysis and simulation. Real-world fill behavior and live profitability would require separate evidence."
+      "title": "What I carried forward",
+      "text": "A filter that kept only volatile sessions had the highest simulated account value among three rules I compared. Its interval for average profit per trade crossed zero. I kept the only rule whose interval stayed above zero for further evaluation. These results use historical trades and simulated execution. I’d need live fills to tell how well they carry over."
     }
   ],
   "links": [

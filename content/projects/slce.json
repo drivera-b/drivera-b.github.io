@@ -24,7 +24,7 @@
   "sections": [
     {
       "title": "What I built",
-      "text": "I helped develop a Streamlit prototype with a baseline classifier and a separate simulation of possible health trajectories. The baseline is trained on 303 labeled UCI Cleveland records. 6,161 NHANES records provide population context, and the two datasets stay separate because their labels are not compatible. The app documents where its inputs come from and shows uncertainty bands across simulations. We presented it at the Palmdale High School STEM Expo, where it placed 1st in Computer Science.",
+      "text": "I helped develop the Stochastic Lifestyle Control Engine, a Streamlit prototype that starts with a heart disease risk estimate and simulates how it might change under different assumptions. We trained the baseline on 303 labeled UCI Cleveland records and used 6,161 NHANES records as a separate population reference. We presented it at the Palmdale High School STEM Expo, where it placed 1st in Computer Science.",
       "figure": {
         "file": "slce-simulation-charts.png",
         "width": 1280,
@@ -35,7 +35,7 @@
     },
     {
       "title": "A modeling choice",
-      "text": "Five-fold evaluation favored logistic regression on probability error among the three models we compared, with a Brier score of 0.119. We kept it as the baseline because probability quality mattered for the simulation, and a simpler model made the inputs and assumptions easier to inspect.",
+      "text": "We compared three classifiers in five-fold cross-validation. Logistic regression had the lowest Brier score, 0.119, meaning its predicted probabilities had the lowest average squared error on the held-out records. We kept it because those probabilities are what the simulation starts from.",
       "figure": {
         "file": "slce-model-benchmark.png",
         "width": 2030,

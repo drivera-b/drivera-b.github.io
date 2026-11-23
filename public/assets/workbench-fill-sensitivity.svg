@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560">
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #282534; }
+    .title { font-family: Georgia, serif; font-size: 49px; letter-spacing: -1.4px; }
+    .subtitle { fill: #594f65; font-size: 24px; }
+    .label { font-size: 27px; }
+    .value { font-size: 28px; font-weight: 650; }
+    .tick, .note { fill: #594f65; font-size: 21px; }
+    .grid { stroke: #d5cbbf; stroke-width: 1.25; }
+    .track { fill: #e3dad0; }
+    .scenario { fill: #645680; }
+    .fill-stress { fill: #a24b48; }
+  </style>
+  <rect width="960" height="100%" fill="#f5efe6"/>
+  <path d="M48 139H912" class="grid"/>
+  <text x="48" y="71" class="title" text-anchor="start">When fills get worse</text>
+  <text x="50" y="111" class="subtitle" text-anchor="start">Expected net value over one simulated account lifecycle</text>
+  <text x="48" y="208" class="label" text-anchor="start">Baseline</text>
+  <rect x="275" y="189" width="438" height="22" rx="3" class="track"/>
+  <rect x="275" y="189" width="366.347" height="22" rx="3" class="scenario"/>
+  <text x="910" y="200" class="value" text-anchor="end">$2,509.22</text>
+  <text x="910" y="228" class="note" text-anchor="end">73.3% funded payout</text>
+  <text x="48" y="299" class="label" text-anchor="start">+$1 per trade</text>
+  <rect x="275" y="280" width="438" height="22" rx="3" class="track"/>
+  <rect x="275" y="280" width="339.349" height="22" rx="3" class="scenario"/>
+  <text x="910" y="291" class="value" text-anchor="end">$2,324.31</text>
+  <text x="910" y="319" class="note" text-anchor="end">71.3% funded payout</text>
+  <text x="48" y="390" class="label" text-anchor="start">+$2 per trade</text>
+  <rect x="275" y="371" width="438" height="22" rx="3" class="track"/>
+  <rect x="275" y="371" width="309.534" height="22" rx="3" class="scenario"/>
+  <text x="910" y="382" class="value" text-anchor="end">$2,120.10</text>
+  <text x="910" y="410" class="note" text-anchor="end">68.0% funded payout</text>
+  <text x="48" y="481" class="label" text-anchor="start">5% fill stress</text>
+  <rect x="275" y="462" width="438" height="22" rx="3" class="track"/>
+  <rect x="275" y="462" width="129.69" height="22" rx="3" class="fill-stress"/>
+  <text x="910" y="473" class="value" text-anchor="end">$888.29</text>
+  <text x="910" y="501" class="note" text-anchor="end">47.3% funded payout</text>
+  <text x="275" y="531" class="tick" text-anchor="start">$0</text>
+  <text x="713" y="531" class="tick" text-anchor="end">$3,000</text>
+</svg>

@@ -1,16 +1,17 @@
-// Twin Comets uses SVG arcs and cubic Bézier curves for the original drawing.
+import { twinComets } from "./scene.js";
+
 const drawing = document.querySelector("#drawing");
 const shape = document.querySelector("#shape");
 const speed = document.querySelector("#speed");
 const play = document.querySelector("#play");
 const replay = document.querySelector("#replay");
-const endTick = 71;
-const paths = [];
+const strokes = twinComets(150);
+const endTick = Math.max(...strokes.map(({ start, duration }) => start + duration));
 let time = 0;
 let lastFrame = null;
 let frameId = null;
 
-function addPath(geometry, color, start, duration, width) {
+const paths = strokes.map(({ color, start, duration, width }) => {
   const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
   path.setAttribute("fill", "none");
   path.setAttribute("stroke", color);
@@ -19,38 +20,13 @@ function addPath(geometry, color, start, duration, width) {
   path.setAttribute("pathLength", 1);
   path.setAttribute("stroke-dasharray", "1 1");
   drawing.append(path);
-  paths.push({ path, geometry, start, duration });
-}
-
-function polar(cx, cy, radius, degrees) {
-  const radians = degrees * Math.PI / 180;
-  return `${cx + radius * Math.cos(radians)} ${cy + radius * Math.sin(radians)}`;
-}
-
-for (const side of [-1, 1]) {
-  for (let i = 0; i < 5; i += 1) {
-    const radius = 52 + 25 * i;
-    const startAngle = 38 + side * i * 18;
-    const endAngle = startAngle + side * 294;
-    const hue = side < 0 ? 163 + 13 * i : 18 + 10 * i;
-    addPath(separation => {
-      const start = polar(side * separation, side * 52, radius, startAngle);
-      const end = polar(side * separation, side * 52, radius, endAngle);
-      return `M ${start} A ${radius} ${radius} 0 1 ${side > 0 ? 1 : 0} ${end}`;
-    }, `hsl(${hue} 75% 66%)`, i * 4, 30, 3);
-  }
-}
-
-for (let i = 0; i < 7; i += 1) {
-  const shift = (i - 3) * 15;
-  const reach = 175 + 13 * i;
-  addPath(separation => `M ${-separation} ${shift - 52} C -100 ${reach} 100 ${-reach} ${separation} ${52 - shift}`,
-    `hsl(${252 + 11 * i} 76% 71%)`, 22 + i * 3, 31, 4);
-}
+  return { path, start, duration };
+});
 
 function updateShape() {
   const separation = 125 + Number(shape.value) / 2;
-  for (const { path, geometry } of paths) path.setAttribute("d", geometry(separation));
+  const drawingStrokes = twinComets(separation);
+  paths.forEach(({ path }, index) => path.setAttribute("d", drawingStrokes[index].geometry));
 }
 
 function paint() {

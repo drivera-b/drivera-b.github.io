@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="608" viewBox="0 0 960 608">
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #282534; }
+    .title { font-family: Georgia, serif; font-size: 49px; letter-spacing: -1.4px; }
+    .subtitle { fill: #594f65; font-size: 24px; }
+    .label { font-size: 27px; }
+    .value { font-size: 28px; font-weight: 650; }
+    .tick, .note { fill: #594f65; font-size: 21px; }
+    .grid { stroke: #d5cbbf; stroke-width: 1.25; }
+    .zero { stroke: #827487; stroke-width: 1.5; }
+    .estimate { fill: #645680; }
+    .range { stroke: #746785; stroke-width: 3; stroke-linecap: round; }
+    .on-track { fill: #29675c; font-size: 21px; }
+    .estimate-on-track { fill: #29675c; }
+    .range-on-track { stroke: #29675c; stroke-width: 3; stroke-linecap: round; }
+  </style>
+  <rect width="960" height="100%" fill="#f5efe6"/>
+  <path d="M48 139H912" class="grid"/>
+  <text x="48" y="71" class="title" text-anchor="start">How the estimate holds up</text>
+  <text x="50" y="111" class="subtitle" text-anchor="start">Expected dollars per trade and its bootstrap interval</text>
+  <path d="M318 170L318 502" class="grid"/>
+  <text x="318" y="535" class="tick" text-anchor="middle">-50</text>
+  <path d="M458.667 170L458.667 502" class="zero"/>
+  <text x="458.667" y="535" class="tick" text-anchor="middle">0</text>
+  <path d="M599.333 170L599.333 502" class="grid"/>
+  <text x="599.333" y="535" class="tick" text-anchor="middle">+50</text>
+  <path d="M740 170L740 502" class="grid"/>
+  <text x="740" y="535" class="tick" text-anchor="middle">+100</text>
+  <text x="48" y="194" class="label" text-anchor="start">20 sessions</text>
+  <text x="48" y="219" class="note" text-anchor="start">Inconclusive</text>
+  <path d="M346.973 189L704.05 189" class="range"/>
+  <circle cx="525.511" cy="189" r="6" class="estimate"/>
+  <text x="910" y="197" class="value" text-anchor="end">$23.76</text>
+  <text x="48" y="266" class="label" text-anchor="start">30 sessions</text>
+  <text x="48" y="291" class="note" text-anchor="start">Inconclusive</text>
+  <path d="M440.277 261L715.65 261" class="range"/>
+  <circle cx="577.963" cy="261" r="6" class="estimate"/>
+  <text x="910" y="269" class="value" text-anchor="end">$42.40</text>
+  <text x="48" y="338" class="label" text-anchor="start">45 sessions</text>
+  <text x="48" y="363" class="on-track" text-anchor="start">On track</text>
+  <path d="M481.721 333L690.676 333" class="range-on-track"/>
+  <circle cx="586.362" cy="333" r="6" class="estimate-on-track"/>
+  <text x="910" y="341" class="value" text-anchor="end">$45.39</text>
+  <text x="48" y="410" class="label" text-anchor="start">60 sessions</text>
+  <text x="48" y="435" class="note" text-anchor="start">Inconclusive</text>
+  <path d="M434.492 405L629.534 405" class="range"/>
+  <circle cx="532.013" cy="405" r="6" class="estimate"/>
+  <text x="910" y="413" class="value" text-anchor="end">$26.07</text>
+  <text x="48" y="482" class="label" text-anchor="start">90 sessions</text>
+  <text x="48" y="507" class="on-track" text-anchor="start">On track</text>
+  <path d="M459.467 477L622.22 477" class="range-on-track"/>
+  <circle cx="537.305" cy="477" r="6" class="estimate-on-track"/>
+  <text x="910" y="485" class="value" text-anchor="end">$27.95</text>
+  <text x="48" y="578" class="note" text-anchor="start">The 90-session window contains 83 observed sessions.</text>
+</svg>

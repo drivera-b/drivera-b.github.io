@@ -3,11 +3,11 @@
   "year": 2026,
   "featuredOrder": 0,
   "topics": ["Software", "Graphics"],
-  "summary": "A browser animation project from Berkeley CS 61A, with drawings that respond to live shape and speed controls.",
+  "summary": "A browser editor for writing drawings in Gleam and animating them with live shape and speed controls.",
   "question": "How much can one control change the feel of a drawing?",
-  "demo": { "path": "orbit-loom/", "label": "Open interactive demo" },
+  "demo": { "url": "https://animator-orbit-loom.sacredrice18.chatgpt.site/", "label": "Open the live editor" },
   "links": [
-    { "label": "GitHub demo source", "url": "https://github.com/drivera-b/orbit-loom" }
+    { "label": "Twin Comets viewer source", "url": "https://github.com/drivera-b/orbit-loom" }
   ],
   "figure": {
     "file": "orbit-loom-twin-comets.jpg",
@@ -19,11 +19,11 @@
   "sections": [
     {
       "title": "The drawing editor",
-      "text": "I used a browser-based drawing editor to explore how curves feel when they move. The canvas renders the drawing beside its controls, so I could adjust the shape, change the speed, pause, or replay and see the effect immediately."
+      "text": "Orbit Loom grew out of Berkeley’s CS 61A Animator project. I used it to make Twin Comets. In the live editor, you can pick one of the drawings, change its Gleam code next to the canvas, or start a drawing of your own."
     },
     {
       "title": "Twin Comets",
-      "text": "Two sets of arcs are joined by ribbons. Moving the shape slider changes the distance between the centers and stretches the ribbons. The public demo redraws that piece directly in SVG."
+      "text": "Two sets of arcs are joined by ribbons. Pick Twin Comets from the drawing menu, then move Shape to see how changing the distance between the centers stretches the ribbons."
     }
   ]
 }

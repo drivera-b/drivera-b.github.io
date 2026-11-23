@@ -81,7 +81,7 @@ let dealt = 0; // position in the current deal, so the cards land one after anot
 function cardGroup(label, cards, empty = 0) {
   const row = el("span", { class: "cards" }, ...cards.map(card => {
     const node = cardNode(card);
-    node.style.animationDelay = `${dealt * 110}ms`;
+    node.style.animationDelay = `${dealt * 65}ms`;
     dealt += 1;
     return node;
   }));

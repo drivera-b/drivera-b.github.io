@@ -12,11 +12,11 @@
     { "label": "GitHub source", "url": "https://github.com/drivera-b/Python-Poker-Simulator-Monte-Carlo-" }
   ],
   "figure": {
-    "file": "poker-equity-benchmark.png",
+    "file": "poker-equity-benchmark.svg",
     "width": 960,
     "height": 560,
-    "alt": "Estimated preflop equity is 85% for pocket aces, 67% for ace-king suited, and 34% for seven-two offsuit against one random opponent.",
-    "caption": "An example run of my Python simulator. Each hand was tested over 8,000 seeded deals against one random opponent, with split pots counted toward equity."
+    "alt": "Estimated preflop equity against one random opponent was 84.9% for pocket aces, 66.7% for ace-king suited, and 34.0% for seven-two offsuit.",
+    "caption": "I ran 8,000 deals per hand against one random opponent. Equity is the average share of the pot, including the fraction won in a tie."
   },
   "symbol": {
     "glyph": "Ω",
@@ -30,7 +30,7 @@
     },
     {
       "title": "What I learned",
-      "text": "Equity includes the share of the pot you take when a hand ties. Making that distinction meant testing split pots as well as edge cases in hand ranking, from ace-low straights to kicker ties."
+      "text": "Two players can both have a pair of aces and still have different hands. The highest remaining card, the kicker, can decide the winner, so I added tests for cases like that and split pots. The example deals the opponent random cards. Giving the opponent a narrower range would change the estimates."
     }
   ]
 }

@@ -1,7 +1,10 @@
 const filter = document.querySelector(".work-filter");
 const chips = [...document.querySelectorAll(".work-filter .chip")];
 const count = document.querySelector("#work-count");
-const rows = document.querySelectorAll("#work-projects > li");
+const gallery = document.querySelector("#work-projects");
+const rows = gallery.querySelectorAll(":scope > li");
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+let filterAnimation;
 
 function showTopic(topic) {
   let visible = 0;
@@ -22,7 +25,15 @@ filter.hidden = false;
 for (const chip of chips) {
   chip.addEventListener("click", () => {
     const topic = chip.dataset.topic;
+    const changed = chip.getAttribute("aria-pressed") !== "true";
     showTopic(topic);
+    if (changed && !reducedMotion.matches && typeof gallery.animate === "function") {
+      filterAnimation?.cancel();
+      filterAnimation = gallery.animate(
+        [{ opacity: 0.7, transform: "translateY(3px)" }, { opacity: 1, transform: "none" }],
+        { duration: 190, easing: "cubic-bezier(.16, 1, .3, 1)" },
+      );
+    }
     const url = new URL(window.location.href);
     if (topic) {
       url.searchParams.set("topic", topic);

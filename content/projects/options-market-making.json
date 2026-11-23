@@ -12,11 +12,11 @@
     { "label": "GitHub source", "url": "https://github.com/drivera-b/options-market-making-lab" }
   ],
   "figure": {
-    "file": "options-hedge-costs.png",
+    "file": "options-hedge-costs.svg",
     "width": 960,
     "height": 560,
-    "alt": "Simulated fees of $0.016 for 12 hedge adjustments, $0.034 for 52, and $0.065 for 252.",
-    "caption": "Fees from the lab’s seeded six-month call example. The bars show costs for the simulated schedules."
+    "alt": "Simulated transaction fees of $0.016 for 12 hedge trades, $0.034 for 52, and $0.065 for 252.",
+    "caption": "In the six-month call example, fees range from 1.6¢ to 6.5¢ across three schedules. Trade counts include opening the hedge."
   },
   "symbol": {
     "glyph": "Δ",
@@ -26,11 +26,11 @@
   "sections": [
     {
       "title": "What’s in the simulator",
-      "text": "The lab includes European option prices from Black–Scholes, a binomial tree, and seeded Monte Carlo. It also simulates discrete delta hedges and inventory-aware quotes under stylized order flow, with separate accounting for sources of profit and loss."
+      "text": "I priced European options three ways: Black–Scholes, a binomial tree, and Monte Carlo. Then I simulated adjusting the stock hedge as the option’s sensitivity changed. In a separate market-making simulation, the dealer lowers its quotes when it has too many options, encouraging buyers to take some of that inventory."
     },
     {
-      "title": "What it can illustrate",
-      "text": "The setup makes it possible to hold a price path fixed and compare hedge frequency or compare quotes while holding the order-flow seed fixed. These are controlled scenarios built on idealized prices and fills."
+      "title": "What the example measures",
+      "text": "Each schedule runs on its own seeded price path. The bars show the commissions paid on stock trades in those runs. To isolate the effect of trading more often, I’d compare the schedules on the same underlying price paths across many runs."
     }
   ]
 }

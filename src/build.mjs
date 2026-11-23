@@ -39,11 +39,8 @@ async function loadProject(directory, filename, extra = {}) {
     throw new Error(`Missing project content in ${filename}`);
   }
   if (project.figure) await checkFigure(project.figure, filename);
-  if (project.demo) {
-    if (!project.demo.label || !/^[a-z0-9]+(?:-[a-z0-9]+)*\/$/.test(project.demo.path)) {
-      throw new Error(`Invalid demo path in ${filename}`);
-    }
-    await access(new URL(`public/${project.demo.path}index.html`, base));
+  if (project.demo && (!project.demo.label || !project.demo.url || new URL(project.demo.url).protocol !== "https:")) {
+    throw new Error(`The demo in ${filename} needs a label and an HTTPS URL`);
   }
   if (project.symbol && !(project.symbol.glyph && project.symbol.name && project.symbol.meaning)) {
     throw new Error(`Symbol in ${filename} needs a glyph, a name, and a meaning`);
@@ -99,6 +96,9 @@ if (site.hero) {
 }
 
 for (const photo of site.photos ?? []) await checkFigure(photo, "content/site.json");
+if (site.homePhoto && !site.photos?.some(photo => photo.file === site.homePhoto)) {
+  throw new Error("content/site.json: homePhoto must name one of the photos");
+}
 if (site.now && (!site.now.label || !site.now.paragraphs?.length || (site.now.symbol && !site.now.symbol.glyph))) {
   throw new Error("content/site.json: now needs a label and at least one paragraph");
 }
@@ -122,7 +122,7 @@ await writeFile(new URL(".nojekyll", dist), "");
 // Stylesheet and script links carry a short fingerprint of their contents. When any of
 // them changes the address changes, so browsers fetch the new file instead of a saved copy.
 const fingerprint = createHash("sha256");
-for (const file of ["site.css", "theme.js", "home.js", "work.js", "market.js", "poker.js"]) {
+for (const file of ["site.css", "favicon.svg", "theme.js", "home.js", "work.js", "image-viewer.js", "market.js", "poker.js"]) {
   fingerprint.update(await readFile(new URL(`public/assets/${file}`, base)));
 }
 const version = fingerprint.digest("hex").slice(0, 10);
@@ -136,7 +136,7 @@ await writePage("./", {
   body: home(site, review ? projects.filter(project => !project.candidate) : projects),
 });
 await writePage("work/", {
-  site, title: `Work | ${site.name}`, description: site.workIntro, root: "../", current: "work",
+  site, title: `Projects | ${site.name}`, description: site.workIntro, root: "../", current: "work",
   body: work(site, projects), script: "work.js",
 });
 if (site.market) {
@@ -151,7 +151,7 @@ await writePage("about/", {
 });
 for (const [index, project] of projects.entries()) {
   await writePage(`work/${project.slug}/`, {
-    site, title: `${project.title} | ${site.name}`, description: project.summary, root: "../../",
+    site, title: `${project.title} | ${site.name}`, description: project.summary, root: "../../", current: "case",
     body: projectPage(project, projects[(index + 1) % projects.length], Boolean(site.market)),
   });
 }
