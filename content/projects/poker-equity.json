@@ -9,7 +9,7 @@
   "question": "How much of the pot is a hand worth when some of the cards are still unknown?",
   "relatedGame": true,
   "links": [
-    { "label": "GitHub source", "url": "https://github.com/drivera-b/poker-equity-simulator" }
+    { "label": "GitHub source", "url": "https://github.com/drivera-b/Python-Poker-Simulator-Monte-Carlo-" }
   ],
   "figure": {
     "file": "poker-equity-benchmark.png",
