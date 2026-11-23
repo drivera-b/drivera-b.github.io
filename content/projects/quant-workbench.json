@@ -7,8 +7,9 @@
     "Quant",
     "Software"
   ],
-  "summary": "I built a Python workbench to see whether intraday futures strategies hold up under worse execution, extra fees, and different account rules.",
+  "summary": "My private Python workbench for intraday futures research and backtesting, with a public case study on funded-account rules.",
   "question": "What happens to a promising backtest when trades get worse prices or cost more to place?",
+  "deck": "I built a private Python workbench to backtest intraday futures strategies. The funded-account comparison is one example of how I use it.",
   "symbol": {
     "glyph": "α",
     "name": "alpha",
@@ -23,12 +24,12 @@
   },
   "sections": [
     {
-      "title": "Where it started",
-      "text": "I started studying NQ and ES futures on my own in 2021. The workbench grew out of wanting to know how much I could trust the results I was seeing in a backtest."
+      "title": "The workbench",
+      "text": "I started studying NQ and ES futures on my own in 2021. I built the workbench to turn historical market data into trade setups I could backtest and compare under different rules. The public demo starts with an anonymized trade export and includes selected results and code to analyze them."
     },
     {
-      "title": "What I built",
-      "text": "I locked in a benchmark of 1,123 historical out-of-sample trades before comparing it with more recent windows. I resampled trades within each window to estimate how uncertain its average profit or loss per trade was. The public Python package can recreate the reports from the included anonymized trade data and reference results.",
+      "title": "Checking the trade results",
+      "text": "For this study, I locked in a benchmark of 1,123 historical out-of-sample trades before comparing it with more recent windows. I resampled trades within each window to estimate how uncertain its average profit or loss per trade was.",
       "figure": {
         "file": "workbench-window-intervals.svg",
         "width": 960,
@@ -55,11 +56,11 @@
   ],
   "links": [
     {
-      "label": "Public repository",
+      "label": "Public research demo",
       "url": "https://github.com/drivera-b/quant-workbench"
     },
     {
-      "label": "Research case study",
+      "label": "Funded-account case study",
       "url": "https://github.com/drivera-b/quant-workbench/blob/main/CASE_STUDY.md"
     }
   ]

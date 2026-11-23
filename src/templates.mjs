@@ -309,7 +309,7 @@ export function projectPage(project, next, hasMarket) {
       <div class="case-intro">
         <p class="byline"><span class="meta-date">${period(project)}</span><span>${project.topics.map(escapeHtml).join(", ")}</span>${candidateTag(project)}</p>
         <h1>${escapeHtml(project.title)}</h1>
-        <p class="deck">${escapeHtml(project.question)}</p>
+        <p class="deck">${escapeHtml(project.deck ?? project.question)}</p>
         ${links.length ? `<p class="project-links">${links.join(" ")}</p>` : ""}
       </div>
       ${cover}
